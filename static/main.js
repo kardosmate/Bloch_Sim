@@ -308,10 +308,12 @@ drawVector(scene, xed, 0xff0000);
 
 class Qbit {
   constructor(
+    id,
     initial = new THREE.Vector3(0,1,0),
     current = new THREE.Vector3(0,1,0),
     color = new THREE.Color(0xffffff),
   ) {
+    this.id = id;
     this.initial = initial.clone();
     this.current = current.clone();
     this.color = color.clone();
@@ -328,44 +330,60 @@ class Qbit {
   }
 }
 
-let qbits = [new Qbit()];
-let selectedQbit = 0;
-
-qbits[0].refresh();
+let qbits = [];
+let selectedQbit = null;
 
 
-function addNewQbit(x,y,z, hex) {
-  qbits.push(new QBit(new THREE.Vector3(x,y,z), new THREE.Vector3(x,y,z), new THREE.Color(hex)));
+function addNewQbit(id, x,y,z,hex) {
+  let newqbit = new Qbit(id, new THREE.Vector3(x,y,z), new THREE.Vector3(x,y,z), new THREE.Color(hex));
+  newqbit.refresh();
+  qbits.push(newqbit);
 }
 
 function deleteQbit() {
-  qbits.splice(selectedQbit, 1);
+  if (selectedQbit == null)
+    return;
+
+  const index = arr.indexOf(getQbit(selectedQbit));
+  qbits.splice(index, 1);
   selectedQbit = null;
 }
 
-function selectQbit(index) {
-  selectQbit = index;
+function selectQbit(id) {
+  selectedQbit = id;
 }
 
 function applyGate(gate) {
   if(selectedQbit == null)
     return;
 
-  let current = qbits[selectedQbit].current.clone();
-  qbits[selectedQbit].current = QMath.applyAndConvert(current, gate);
-  qbits[selectedQbit].refresh();
+  let sQ = getQbit(selectedQbit);
+  let current = sQ.current.clone();
+  sQ.current = QMath.applyAndConvert(current, gate);
+  sQ.refresh();
 }
 
 function reset() {
   if(selectedQbit == null)
     return;
 
-  qbits[selectedQbit].current = qbits[selectedQbit].initial.clone();
-  qbits[selectedQbit].refresh();
+  let sQ = getQbit(selectedQbit);
+  sQ.current = sQ.initial.clone();
+  sQ.refresh();
 }
 
 function clear() {
   qbits = [];
+  selectedQbit = null;
+}
+
+function getQbit(id) {
+  for (let i = 0;i<qbits.length;i++){
+    if(qbits[i].id === id) {
+      return qbits[i];
+    }
+  }
+  return null;
 }
 
 
@@ -409,15 +427,19 @@ document.addEventListener('DOMContentLoaded', () => {
     hbutton.addEventListener('click', () => applyGate(QMath.HADAMARD));
 });
 
+function getRandomIntInclusive(min, max) {
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
+}
 
-
-function createElement(color, x, y, z) {
+function createElement(color, x, y, z, id) {
     const wrapper = document.createElement('div');
     wrapper.className = 'element';
 
     const colorBox = document.createElement('div');
     colorBox.className = 'color-box';
-    colorBox.style.background = color;
+    colorBox.style.backgroundColor = `#${color.toString(16).padStart(6, '0')}`;
 
     const coords = document.createElement('div');
     coords.className = 'coordinates';
@@ -428,7 +450,7 @@ function createElement(color, x, y, z) {
 
 
     wrapper.addEventListener('click', () => {
-        console.log(`Ez az elem szine: ${color}`);
+        selectQbit(id);
     });
 
     return wrapper;
@@ -441,7 +463,10 @@ const addBtn = document.getElementById('addBtn').addEventListener
         const randX = (Math.random() * 2 - 1).toFixed(2);
         const randY = (Math.random() * 2 - 1).toFixed(2);
         const randZ = (Math.random() * 2 - 1).toFixed(2);
-        const randColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-        const newElement = createElement(randColor, parseFloat(randX), parseFloat(randY), parseFloat(randZ));
+        const randColor = Math.floor(Math.random() * 0xFFFFFF);
+        let randomID = getRandomIntInclusive(100000, 999999);
+        const newElement = createElement(randColor, parseFloat(randX), parseFloat(randY), parseFloat(randZ), randomID);
         listContainer.appendChild(newElement);
+
+        addNewQbit(randomID, randX, randY, randZ, randColor);
     });
