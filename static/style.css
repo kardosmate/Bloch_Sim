@@ -1,0 +1,163 @@
+/* =============================
+   Színek és Body: világos / sötét mód
+============================= */
+body.light {
+    --toggle-color: #42a5f5; /* világos mód: toggle kék, mint a fancy gomb */
+    background: #fdfdfd;
+    color: #111;
+    font-family: 'Arial', sans-serif;
+}
+
+body.dark {
+    --toggle-color: #f5f5f5; /* sötét mód: toggle világos */
+    background: #1e1e1e;
+    color: #f5f5f5;
+    font-family: 'Arial', sans-serif;
+}
+
+/* =============================
+   Panel: bal oldali (látható/nem látható)
+============================= */
+#ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 0 12px 12px 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease, background 0.3s ease;
+    z-index: 10;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    opacity: 1;
+    visibility: visible;
+}
+
+#ui-container.closed {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* =============================
+   Toggle gomb (hamburger -> 1 vonal animációval)
+============================= */
+#toggleBtn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+#toggleBtn span {
+    display: block;
+    width: 30px;
+    height: 3px;
+    background: var(--toggle-color); /* szín változó szerint */
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* Nyitott állapot animáció: 1 darab vonal */
+#toggleBtn.open span:nth-child(1) {
+    transform: translateY(9px) scaleY(1.5);
+}
+
+#toggleBtn.open span:nth-child(2) {
+    opacity: 0;
+}
+
+#toggleBtn.open span:nth-child(3) {
+    transform: translateY(-9px) scaleY(1.5);
+}
+
+/* =============================
+   Fancy gombok
+============================= */
+.fancy-btn {
+    background: linear-gradient(135deg, #42a5f5, #1e88e5);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.fancy-btn:hover {
+    background: linear-gradient(135deg, #64b5f6, #2196f3);
+    transform: translateY(-2px);
+}
+
+.fancy-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* =============================
+   Vector inputok
+============================= */
+.vector-inputs label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 2px 0;
+}
+
+.vector-inputs input {
+    width: 60px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.vector-inputs input:focus {
+    outline: none;
+    border-color: #2196f3;
+}
+
+/* =============================
+   Gate gombok
+============================= */
+.gate-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* =============================
+   Sötét mód stílusok
+============================= */
+body.dark #ui-container {
+    background: rgba(40, 40, 40, 0.95);
+}
+
+body.dark .fancy-btn {
+    background: linear-gradient(135deg, #555555, #333333);
+}
+
+body.dark .fancy-btn:hover {
+    background: linear-gradient(135deg, #666666, #444444);
+}
+
+body.dark .vector-inputs input {
+    background: #333333;
+    border: 1px solid #555;
+    color: #fff;
+}

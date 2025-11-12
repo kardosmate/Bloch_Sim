@@ -15,6 +15,7 @@ const light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(2, 2, 5);
 scene.add(light);
 
+
 camera.position.z = 3;
 
 function animate() {
@@ -24,4 +25,33 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
+
+
+
+
+let lightMode = false; 
+
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.addEventListener('click', () => {
+  lightMode = !lightMode;
+
+  if(lightMode){
+    document.body.classList.add('light');
+    document.body.classList.remove('dark');
+    renderer.setClearColor(0xffffff); 
+  } else {
+    document.body.classList.add('dark');
+    document.body.classList.remove('light');
+    renderer.setClearColor(0x111111); 
+  }
+});
+
+const uiContainer = document.getElementById('ui-container');
+const toggleBtn = document.getElementById('toggleBtn');
+
+toggleBtn.addEventListener('click', () => {
+  uiContainer.classList.toggle('closed');  
+  toggleBtn.classList.toggle('open');      
+});
+
 
