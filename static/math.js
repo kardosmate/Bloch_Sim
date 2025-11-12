@@ -118,23 +118,23 @@ export const ketMinus = normalize([C(1,0), C(-1,0)]);
 
 
 // --- Pauli és Hadamard mátrixok ---
-const PAULI_X = [
+export const PAULI_X = [
   [C(0,0), C(1,0)],
   [C(1,0), C(0,0)]
 ];
 
-const PAULI_Y = [
+export const PAULI_Y = [
   [C(0,0), C(0,-1)], // -i
   [C(0,1), C(0,0)]   // +i
 ];
 
-const PAULI_Z = [
+export const PAULI_Z = [
   [C(1,0), C(0,0)],
   [C(0,0), C(-1,0)]
 ];
 
 const H = (1 / Math.sqrt(2));
-const HADAMARD = [
+export const HADAMARD = [
   [C(H,0), C(H,0)],
   [C(H,0), C(-H,0)]
 ];
@@ -142,6 +142,12 @@ const HADAMARD = [
 // --- Gate alkalmazó segédfüggvény ---
 function applyGate(gateMatrix, stateVector) {
   return matrixVectorMultiply(gateMatrix, stateVector);
+}
+
+export function applyAndConvert(cartesian, gateMatrix) {
+  const state = blochToState(cartesian);
+  const newstate = applyGate(gateMatrix, state);
+  return stateToBloch(newstate);
 }
 
 // --- FŐ EXPORTÁLT KAPU FÜGGVÉNYEK ---

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { applyPauliX, applyPauliY, applyPauliZ, applyHadamard } from './math.js';
+import * as QMath from './math.js';
 
 // The radius for the main sphere and circles
 const SPHERE_RADIUS = 1.0; // Unit radius for Bloch Sphere
@@ -299,34 +299,73 @@ var biggusStatus = new THREE.Vector3(1, 1, 0);
 const cartesianVector2 = new THREE.Vector3(1, 1, 0);
 drawVector(scene, cartesianVector2.normalize(), 0xff0000);
 
-const xed = applyPauliZ(biggusStatus);
+const xed = QMath.applyAndConvert(biggusStatus, QMath.PAULI_Z);
 console.log("hihiha");
 console.log(xed);
 drawVector(scene, xed, 0xff0000);
 
 /// QBIT API
-function addNewQbit(x,y,z) {
 
+class Qbit {
+  constructor(
+    initial = new THREE.Vector3(0,1,0),
+    current = new THREE.Vector3(0,1,0),
+    color = new THREE.Color(0xffffff),
+  ) {
+    this.initial = initial.clone();
+    this.current = current.clone();
+    this.color = color.clone();
+    this.group = drawVector(scene, this.current, this.color);
+  }
+
+  refresh() {
+    scene.remove(this.group);
+    this.group = drawVector(scene, this.current, this.color);
+  }
+
+  reset() {
+    this.current.copy(this.initial);
+  }
+}
+
+let qbits = [new Qbit()];
+let selectedQbit = 0;
+
+qbits[0].refresh();
+
+
+function addNewQbit(x,y,z, hex) {
+  qbits.push(new QBit(new THREE.Vector3(x,y,z), new THREE.Vector3(x,y,z), new THREE.Color(hex)));
 }
 
 function deleteQbit() {
-//select new
+  qbits.splice(selectedQbit, 1);
+  selectedQbit = null;
 }
 
 function selectQbit(index) {
-
+  selectQbit = index;
 }
 
 function applyGate(gate) {
+  if(selectedQbit == null)
+    return;
 
+  let current = qbits[selectedQbit].current.clone();
+  qbits[selectedQbit].current = QMath.applyAndConvert(current, gate);
+  qbits[selectedQbit].refresh();
 }
 
 function reset() {
+  if(selectedQbit == null)
+    return;
 
+  qbits[selectedQbit].current = qbits[selectedQbit].initial.clone();
+  qbits[selectedQbit].refresh();
 }
 
 function clear() {
-
+  qbits = [];
 }
 
 
@@ -334,6 +373,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('toggleBtn');
     const uiContainer = document.getElementById('ui-container');
     const themeBtn = document.getElementById('themeBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const xbutton = document.getElementById('x-gate-btn');
+    const ybutton = document.getElementById('y-gate-btn');
+    const zbutton = document.getElementById('z-gate-btn');
+    const hbutton = document.getElementById('h-gate-btn');
 
     toggleBtn.addEventListener('click', () => {
         uiContainer.classList.toggle('closed');
@@ -355,4 +400,11 @@ document.addEventListener('DOMContentLoaded', () => {
           scene.add(grid);
         }
     });
+
+    resetBtn.addEventListener('click', () => reset());
+
+    xbutton.addEventListener('click', () => applyGate(QMath.PAULI_X));
+    ybutton.addEventListener('click', () => applyGate(QMath.PAULI_Y));
+    zbutton.addEventListener('click', () => applyGate(QMath.PAULI_Z));
+    hbutton.addEventListener('click', () => applyGate(QMath.HADAMARD));
 });
