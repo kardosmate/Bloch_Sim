@@ -310,8 +310,8 @@ function addNewQbit(x,y,z) {
 
 }
 
-function deleteQbit(index) {
-
+function deleteQbit() {
+//select new
 }
 
 function selectQbit(index) {
@@ -319,6 +319,14 @@ function selectQbit(index) {
 }
 
 function applyGate(gate) {
+
+}
+
+function reset() {
+
+}
+
+function clear() {
 
 }
 
