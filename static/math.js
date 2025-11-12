@@ -81,6 +81,19 @@ function normalize(vec) {
   return vec.map(v => scale(v, norm));
 }
 
+function printState(vec) {
+  vec.forEach((c, i) => console.log(`  [${i}] = ${toStr(c)}`));
+  console.log('  norma (összeg |a|^2) =', vec.reduce((acc, x) => acc + abs2(x), 0).toFixed(6));
+  console.log('');
+}
+
+function printBloch(bloch,) {
+  const { x, y, z } = bloch;
+  console.log(`  x = ${x.toFixed(4)}`);
+  console.log(`  y = ${y.toFixed(4)}`);
+  console.log(`  z = ${z.toFixed(4)}`);
+}
+
 // --- alap bázis vektorok (egy qubit) ---
 const ket0 = [C(1,0), C(0,0)];
 const ket1 = [C(0,0), C(1,0)];
@@ -114,8 +127,11 @@ function applyGate(gateMatrix, stateVector) {
 
 export function applyPauliX(bloch) {
   const state = blochToState(bloch);
+  printState(state);
   const newState = normalize(applyGate(PAULI_X, state));
+  printState(newState);
   const newBloch = stateToBloch(newState);
+  printBloch(newBloch);
   return newBloch;
 }
 
