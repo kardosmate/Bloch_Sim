@@ -97,6 +97,8 @@ function drawVector(scene, vEnd, colorHex, options = {}) {
     } = options;
 
     const length = vEnd.length();
+    console.log(length);
+    console.log(vEnd);
     const material = new THREE.MeshBasicMaterial({ color: colorHex });
     const arrowGroup = new THREE.Group();
 
@@ -298,11 +300,14 @@ animate();
 var biggusStatus = new THREE.Vector3(1, 1, 0);
 
 const cartesianVector2 = new THREE.Vector3(1, 1, 0);
-drawVector(scene, cartesianVector2, 0xff0000);
+drawVector(scene, cartesianVector2.normalize(), 0xff0000);
 
 const xed = applyPauliZ(biggusStatus);
 console.log("hihiha");
 console.log(xed);
 drawVector(scene, xed, 0xff0000);
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 1ee92ea64628584573533a6eeb62cb0c6a72aaf8
