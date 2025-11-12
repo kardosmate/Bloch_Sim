@@ -1,17 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Standalone Three.js</title>
+    <title>Bloch Sphere Simulator</title>
     <link rel="stylesheet" href="style.css">
     <script type="importmap">
       {
         "imports": {
-          "three": "https://unpkg.com/three@0.170.0/build/three.module.js"
+          "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+          "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js"
         }
       }
     </script>
   </head>
+  <style>
+    html,body { height:100%; margin:0; }
+    canvas { display:block; width:100%; height:100%; }
+  </style>
   <body style="margin:0; overflow:hidden;">
    <body class="dark" style="margin:0; overflow:hidden; font-family: 'Segoe UI', 'Roboto', sans-serif;">
 
@@ -45,4 +50,3 @@
     <script type="module" src="./main.js"></script>
   </body>
 </html>
-
