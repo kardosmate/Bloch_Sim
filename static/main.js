@@ -408,3 +408,40 @@ document.addEventListener('DOMContentLoaded', () => {
     zbutton.addEventListener('click', () => applyGate(QMath.PAULI_Z));
     hbutton.addEventListener('click', () => applyGate(QMath.HADAMARD));
 });
+
+
+
+function createElement(color, x, y, z) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'element';
+
+    const colorBox = document.createElement('div');
+    colorBox.className = 'color-box';
+    colorBox.style.background = color;
+
+    const coords = document.createElement('div');
+    coords.className = 'coordinates';
+    coords.textContent = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Z: ${z.toFixed(2)}`;
+
+    wrapper.appendChild(colorBox);
+    wrapper.appendChild(coords);
+
+
+    wrapper.addEventListener('click', () => {
+        console.log(`Ez az elem szine: ${color}`);
+    });
+
+    return wrapper;
+}
+
+
+const listContainer = document.getElementById('listContainer');
+const addBtn = document.getElementById('addBtn').addEventListener
+    ('click', () => {
+        const randX = (Math.random() * 2 - 1).toFixed(2);
+        const randY = (Math.random() * 2 - 1).toFixed(2);
+        const randZ = (Math.random() * 2 - 1).toFixed(2);
+        const randColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+        const newElement = createElement(randColor, parseFloat(randX), parseFloat(randY), parseFloat(randZ));
+        listContainer.appendChild(newElement);
+    });

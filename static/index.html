@@ -16,25 +16,27 @@
 <body class="dark" style="margin:0; overflow:hidden;">
 
   <!-- Bal oldali panel -->
-  <div id="ui-container" class="closed">
-    <div style="height:60px;"></div>
-    <button class="fancy-btn" id="resetBtn">Reset</button>
+    <div id="ui-container" class="closed">
+        <div style="height:60px;"></div>
+        <button class="fancy-btn" id="resetBtn">Reset</button>
 
-    <div class="vector-inputs">
-      <label>X: <input type="number" id="vecX" step="0.01" min="-1" max="1"></label>
-      <label>Y: <input type="number" id="vecY" step="0.01" min="-1" max="1"></label>
-      <label>Z: <input type="number" id="vecZ" step="0.01" min="-1" max="1"></label>
+        <div class="vector-inputs">
+            <label>X: <input type="number" id="vecX" step="0.01" min="-1" max="1"></label>
+            <label>Y: <input type="number" id="vecY" step="0.01" min="-1" max="1"></label>
+            <label>Z: <input type="number" id="vecZ" step="0.01" min="-1" max="1"></label>
+        </div>
+        <button id="addBtn" class="fancy-btn">+ Új elem</button>
+
+        <div class="gate-buttons">
+            <button class="fancy-btn" data-gate="X">X</button>
+            <button class="fancy-btn" data-gate="Y">Y</button>
+            <button class="fancy-btn" data-gate="Z">Z</button>
+            <button class="fancy-btn" data-gate="H">H</button>
+        </div>
+
+        <button class="fancy-btn" id="themeBtn">Világos/Sötét</button>
+        <div id="listContainer" class="list"></div>
     </div>
-
-    <div class="gate-buttons">
-      <button class="fancy-btn" data-gate="X" id="x-gate-btn">X</button>
-      <button class="fancy-btn" data-gate="Y" id="y-gate-btn">Y</button>
-      <button class="fancy-btn" data-gate="Z" id="z-gate-btn">Z</button>
-      <button class="fancy-btn" data-gate="H" id="h-gate-btn">H</button>
-    </div>
-
-    <button class="fancy-btn" id="themeBtn">Világos/Sötét</button>
-  </div>
 
   <!-- Toggle gomb -->
   <button id="toggleBtn">
