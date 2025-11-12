@@ -301,6 +301,6 @@ const cartesianVector2 = new THREE.Vector3(0, 1.0, 0);
 drawVector(scene, cartesianVector2, 0xff0000);
 
 const xed = applyPauliX(biggusStatus);
-const newvector = new THREE.Vector3(xed[0], xed.[1], xed.[2]);
+const newvector = new THREE.Vector3(xed[0], xed[1], xed[2]);
 console.log(newvector);
 drawVector(scene, newvector, 0xff0000);

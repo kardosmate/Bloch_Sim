@@ -139,3 +139,4 @@ export function applyHadamard(bloch) {
   const newBloch = stateToBloch(newState);
   return newBloch;
 }
+
