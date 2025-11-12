@@ -1,18 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Standalone Three.js</title>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@0.170.0/build/three.module.js"
-        }
-      }
-    </script>
-  </head>
-  <body style="margin:0; overflow:hidden;">
-    <script type="module" src="./main.js"></script>
-  </body>
-</html>
+<head>
+  <meta charset="utf-8" />
+  <title>Bloch Sphere Simulator</title>
 
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+      "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js"
+    }
+  }
+  </script>
+
+  <style>
+    html,body { height:100%; margin:0; }
+    canvas { display:block; width:100%; height:100%; }
+  </style>
+</head>
+<body>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
