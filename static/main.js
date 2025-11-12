@@ -153,7 +153,7 @@ renderer.setSize(window.innerWidth, window.innerHeight); // Initial set size
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x303030);
+scene.background = new THREE.Color(0x111217);
 
 // Sphere representation
 const sphereGeometry = new THREE.SphereGeometry(SPHERE_RADIUS, 32, 32);
@@ -171,8 +171,12 @@ scene.add(sphereMesh);
 
 // small helper objects so you can perceive rotation / zoom
 // Grid helper size scaled up for better viewing
-let grid = new THREE.GridHelper(5, 10, 0x606060, 0x404040);
+const grid = new THREE.GridHelper(5, 10, 0x444444, 0x222222);
 scene.add(grid);
+
+// Axes helper showing X(Red), Y(Green), Z(Blue) directions
+const axes = new THREE.AxesHelper(0.25); 
+scene.add(axes);
 
 // Center sphere size is now half of its original small size (0.05 / 2 = 0.025)
 const originSphere = new THREE.Mesh(
@@ -302,51 +306,8 @@ const xed = applyPauliZ(biggusStatus);
 console.log("hihiha");
 console.log(xed);
 drawVector(scene, xed, 0xff0000);
+<<<<<<< HEAD
 
 
-
-/// QBIT API
-function addNewQbit(x,y,z) {
-
-}
-
-function deleteQbit(index) {
-
-}
-
-function selectQbit(index) {
-
-}
-
-function applyGate(gate) {
-
-}
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const toggleBtn = document.getElementById('toggleBtn');
-    const uiContainer = document.getElementById('ui-container');
-    const themeBtn = document.getElementById('themeBtn');
-
-    toggleBtn.addEventListener('click', () => {
-        uiContainer.classList.toggle('closed');
-        toggleBtn.classList.toggle('open');
-    });
-
-    themeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark');
-        document.body.classList.toggle('light');
-        if(scene.background.equals(new THREE.Color(0x303030))) {
-
-          scene.background = new THREE.Color(0xF0F0F0);
-          scene.remove(grid);
-          grid = new THREE.GridHelper(5, 10, 0xB0B0B0, 0xD0D0D0);
-          scene.add(grid);
-        } else {  
-          scene.background = new THREE.Color(0x303030);
-          scene.remove(grid);
-          grid = new THREE.GridHelper(5, 10, 0x606060, 0x404040);
-          scene.add(grid);
-        }
-    });
-});
+=======
+>>>>>>> 1ee92ea64628584573533a6eeb62cb0c6a72aaf8
