@@ -187,8 +187,7 @@ const light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(5,10,7);
 scene.add(light);
 
-
-camera.position.z = 3;
+// ------------- Define Axis Normals and Constants -------------
 
 const R = SPHERE_RADIUS;
 const PI = Math.PI;
@@ -296,30 +295,12 @@ function animate() {
 }
 animate();
 
+var biggusStatus = new THREE.Vector3(1, 1, 0);
 
-let lightMode = false; 
+const cartesianVector2 = new THREE.Vector3(1, 1, 0);
+drawVector(scene, cartesianVector2, 0xff0000);
 
-const themeBtn = document.getElementById('themeBtn');
-themeBtn.addEventListener('click', () => {
-  lightMode = !lightMode;
-
-  if(lightMode){
-    document.body.classList.add('light');
-    document.body.classList.remove('dark');
-    renderer.setClearColor(0xffffff); 
-  } else {
-    document.body.classList.add('dark');
-    document.body.classList.remove('light');
-    renderer.setClearColor(0x111111); 
-  }
-});
-
-const uiContainer = document.getElementById('ui-container');
-const toggleBtn = document.getElementById('toggleBtn');
-
-toggleBtn.addEventListener('click', () => {
-  uiContainer.classList.toggle('closed');  
-  toggleBtn.classList.toggle('open');      
-});
-
-
+const xed = applyPauliZ(biggusStatus);
+console.log("hihiha");
+console.log(xed);
+drawVector(scene, xed, 0xff0000);
