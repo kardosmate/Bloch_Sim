@@ -171,12 +171,9 @@ scene.add(sphereMesh);
 
 // small helper objects so you can perceive rotation / zoom
 // Grid helper size scaled up for better viewing
-const grid = new THREE.GridHelper(5, 10, 0x606060, 0x404040);
+let grid = new THREE.GridHelper(5, 10, 0x606060, 0x404040);
 scene.add(grid);
 
-// Axes helper showing X(Red), Y(Green), Z(Blue) directions
-const axes = new THREE.AxesHelper(0.25); 
-scene.add(axes);
 
 // Center sphere size is now half of its original small size (0.05 / 2 = 0.025)
 const originSphere = new THREE.Mesh(
@@ -347,7 +344,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.toggle('dark');
         document.body.classList.toggle('light');
         if(scene.background.equals(new THREE.Color(0x303030))) {
-
           scene.background = new THREE.Color(0xF0F0F0);
           scene.remove(grid);
           grid = new THREE.GridHelper(5, 10, 0xB0B0B0, 0xD0D0D0);
