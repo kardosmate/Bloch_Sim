@@ -306,14 +306,3 @@ console.log(xed);
 drawVector(scene, xed, 0xff0000);
 
 
-
-window.togglePanel = function(btn) {
-    const uiContainer = document.getElementById('ui-container');
-    uiContainer.classList.toggle('closed');
-    btn.classList.toggle('open');
-};
-
-window.toggleTheme = function() {
-    document.body.classList.toggle('dark');
-    document.body.classList.toggle('light');
-};
