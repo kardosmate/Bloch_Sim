@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { applyPauliX, applyPauliY, applyPauliZ, applyHadamard } from './math.js';
 
 // The radius for the main sphere and circles
 const SPHERE_RADIUS = 1.0; // Unit radius for Bloch Sphere
@@ -233,7 +234,7 @@ drawVector(scene, stateVectorSpherical, 0xffffaa);
 // ------------- EXAMPLE 2: Drawing a Cartesian Vector (e.g., |+> state) -------------
 
 // Cartesian coordinates for the |+> state on the X-axis (1, 0, 0)
-const cartesianVector = new THREE.Vector3(R, 0, 0); 
+const cartesianVector = new THREE.Vector3(R, 0, 0);
 drawVector(scene, cartesianVector, 0xffaaff);
 
 
@@ -293,3 +294,13 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
+
+var biggusStatus = [0.0, 1.0, 0.0];
+
+const cartesianVector2 = new THREE.Vector3(0, 1.0, 0);
+drawVector(scene, cartesianVector2, 0xff0000);
+
+const xed = applyPauliX(biggusStatus);
+const newvector = new THREE.Vector3(xed[0], xed.[1], xed.[2]);
+console.log(newvector);
+drawVector(scene, newvector, 0xff0000);
