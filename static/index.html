@@ -1,34 +1,70 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Bloch Sphere Simulator</title>
-    <script type="importmap">
-      {
-        "imports": {
+<head>
+  <meta charset="UTF-8" />
+  <title>Bloch Sphere Simulator</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
           "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
           "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js"
-        }
       }
-    </script>
-  </head>
-  <style>
-    html,body { height:100%; margin:0; }
-    canvas { display:block; width:100%; height:100%; }
-  </style>
-  <body style="margin:0; overflow:hidden;">
-    <div id="ui" style="
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-  ">
-    <button id="btn1">Gomb 1</button>
-    <button id="btn2">Gomb 2</button>
-    <button id="btn3">Gomb 3</button>
+    }
+  </script>
+</head>
+<body class="dark" style="margin:0; overflow:hidden;">
+
+  <!-- Bal oldali panel -->
+  <div id="ui-container" class="closed">
+    <div style="height:60px;"></div>
+    <button class="fancy-btn" id="resetBtn">Reset</button>
+
+    <div class="vector-inputs">
+      <label>X: <input type="number" id="vecX" step="0.01" min="-1" max="1"></label>
+      <label>Y: <input type="number" id="vecY" step="0.01" min="-1" max="1"></label>
+      <label>Z: <input type="number" id="vecZ" step="0.01" min="-1" max="1"></label>
+    </div>
+
+    <div class="gate-buttons">
+      <button class="fancy-btn" data-gate="X">X</button>
+      <button class="fancy-btn" data-gate="Y">Y</button>
+      <button class="fancy-btn" data-gate="Z">Z</button>
+      <button class="fancy-btn" data-gate="H">H</button>
+    </div>
+
+    <button class="fancy-btn" id="themeBtn">Világos/Sötét</button>
   </div>
-    <script type="module" src="./main.js"></script>
-  </body>
+
+  <!-- Toggle gomb -->
+  <button id="toggleBtn">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Three.js canvas -->
+
+  <script type="module" src="./main.js"></script>
+
+
+  <script type="module">
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('toggleBtn');
+        const uiContainer = document.getElementById('ui-container');
+        const themeBtn = document.getElementById('themeBtn');
+
+        toggleBtn.addEventListener('click', () => {
+            uiContainer.classList.toggle('closed');
+            toggleBtn.classList.toggle('open');
+        });
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+        });
+    });
+  </script>
+
+</body>
 </html>
