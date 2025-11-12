@@ -1,17 +1,23 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Bloch Sphere Simulator</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="importmap">
-    {
-      "imports": {
-          "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
-          "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js"
-      }
-    }
-  </script>
+    <meta charset="UTF-8" />
+    <title>Bloch Sphere Simulator</title>
+    <link rel="stylesheet" href="style.css">
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+
+    <script type="importmap">
+        {
+          "imports": {
+              "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+              "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js"
+          }
+        }
+    </script>
 </head>
 <body class="dark" style="margin:0; overflow:hidden;">
 
@@ -21,31 +27,30 @@
         <button class="fancy-btn" id="resetBtn">Reset</button>
 
         <div class="vector-inputs">
-            <label>X: <input type="number" id="vecX" step="0.01" min="-1" max="1"></label>
-            <label>Y: <input type="number" id="vecY" step="0.01" min="-1" max="1"></label>
-            <label>Z: <input type="number" id="vecZ" step="0.01" min="-1" max="1"></label>
+            <label>X: <input type="number" id="vecX" step="0.01" min="-1" max="1" value="0"></label>
+            <label>Y: <input type="number" id="vecY" step="0.01" min="-1" max="1" value="0"></label>
+            <label>Z: <input type="number" id="vecZ" step="0.01" min="-1" max="1" value="0"></label>
         </div>
-        <button id="addBtn" class="fancy-btn">+ Új elem</button>
+        <button id="addBtn" class="fancy-btn">+ Add new vector</button>
+        <button id="clearBtn" class="fancy-btn">Clear vectors</button>
 
         <div class="gate-buttons">
-          <button class="fancy-btn" data-gate="X" id="x-gate-btn">X</button>
-          <button class="fancy-btn" data-gate="Y" id="y-gate-btn">Y</button>
-          <button class="fancy-btn" data-gate="Z" id="z-gate-btn">Z</button>
-          <button class="fancy-btn" data-gate="H" id="h-gate-btn">H</button>
+            <button class="fancy-btn" data-gate="X" id="x-gate-btn">X</button>
+            <button class="fancy-btn" data-gate="Y" id="y-gate-btn">Y</button>
+            <button class="fancy-btn" data-gate="Z" id="z-gate-btn">Z</button>
+            <button class="fancy-btn" data-gate="H" id="h-gate-btn">H</button>
         </div>
 
         <button class="fancy-btn" id="themeBtn">Világos/Sötét</button>
         <div id="listContainer" class="list"></div>
     </div>
 
-  <!-- Toggle gomb -->
   <button id="toggleBtn">
     <span></span>
     <span></span>
     <span></span>
   </button>
 
-  <!-- Three.js canvas -->
 
   <script type="module" src="./main.js"></script>
 

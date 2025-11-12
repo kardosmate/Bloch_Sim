@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+﻿import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as QMath from './math.js';
 
@@ -227,14 +227,8 @@ const stateVectorSpherical = new THREE.Vector3(
     R * Math.cos(theta)                  
 );
 
-// Draw the initial state vector in yellow
-drawVector(scene, stateVectorSpherical, 0xffffaa);
 
-// ------------- EXAMPLE 2: Drawing a Cartesian Vector (e.g., |+> state) -------------
 
-// Cartesian coordinates for the |+> state on the X-axis (1, 0, 0)
-const cartesianVector = new THREE.Vector3(R, 0, 0);
-drawVector(scene, cartesianVector, 0xffaaff);
 
 
 // ------------- Orthographic camera -------------
@@ -259,7 +253,6 @@ controls.zoomSpeed = 1.2;         // feel of wheel zoom
 controls.rotateSpeed = 0.6;
 
 
-// ------------- Handle resize properly -------------
 function onResize() {
   aspect = window.innerWidth / window.innerHeight;
   const halfHeight = orthoSize;
@@ -276,17 +269,6 @@ function onResize() {
 window.addEventListener('resize', onResize, false);
 onResize();
 
-// optional: double-click to reset view
-window.addEventListener('dblclick', () => {
-  // flies camera back to a nice default position
-  camera.position.set(2.5, 2.5, 2.5); // UPDATED RESET POSITION
-  camera.zoom = 1.0;
-  camera.updateProjectionMatrix();
-  controls.target.set(0,0,0);
-  controls.update();
-});
-
-// ------------- Animation loop -------------
 function animate() {
   requestAnimationFrame(animate);
   controls.update();    // required for damping
@@ -294,17 +276,6 @@ function animate() {
 }
 animate();
 
-var biggusStatus = new THREE.Vector3(1, 1, 0);
-
-const cartesianVector2 = new THREE.Vector3(1, 1, 0);
-drawVector(scene, cartesianVector2.normalize(), 0xff0000);
-
-const xed = QMath.applyAndConvert(biggusStatus, QMath.PAULI_Z);
-console.log("hihiha");
-console.log(xed);
-drawVector(scene, xed, 0xff0000);
-
-/// QBIT API
 
 class Qbit {
   constructor(
@@ -323,11 +294,16 @@ class Qbit {
   refresh() {
     scene.remove(this.group);
     this.group = drawVector(scene, this.current, this.color);
+    updateCoordinates(this.id, this.current);
   }
 
   reset() {
     this.current.copy(this.initial);
-  }
+    }
+
+    remove() {
+        scene.remove(this.group);
+    }
 }
 
 let qbits = [];
@@ -339,18 +315,24 @@ function addNewQbit(id, x,y,z,hex) {
   newqbit.refresh();
   qbits.push(newqbit);
 }
-
-function deleteQbit() {
-  if (selectedQbit == null)
-    return;
-
-  const index = arr.indexOf(getQbit(selectedQbit));
+function deleteQbit(id) {
+  const qbit = getQbit(id)
+  const index = qbits.indexOf(qbit);
   qbits.splice(index, 1);
+  qbit.remove();
   selectedQbit = null;
 }
 
+
 function selectQbit(id) {
-  selectedQbit = id;
+    if(selectedQbit != null) {
+        const previousElement = document.getElementById(selectedQbit);
+        previousElement.classList.remove('selectedVector');
+    }
+    selectedQbit = id;
+    const selectedElement = document.getElementById(id);
+    selectedElement.classList.add('selectedVector');
+    
 }
 
 function applyGate(gate) {
@@ -373,6 +355,7 @@ function reset() {
 }
 
 function clear() {
+  qbits.forEach(qbit => qbit.remove());
   qbits = [];
   selectedQbit = null;
 }
@@ -384,6 +367,13 @@ function getQbit(id) {
     }
   }
   return null;
+}
+
+
+function updateCoordinates(id, { x, y, z }) {
+    const element = document.getElementById(id);
+    const coords = element.querySelector('.coordinates');
+    coords.textContent = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Z: ${z.toFixed(2)}`;
 }
 
 
@@ -430,12 +420,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function getRandomIntInclusive(min, max) {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
-  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); 
 }
 
 function createElement(color, x, y, z, id) {
     const wrapper = document.createElement('div');
     wrapper.className = 'element';
+    wrapper.setAttribute('id', id);
 
     const colorBox = document.createElement('div');
     colorBox.className = 'color-box';
@@ -445,9 +436,21 @@ function createElement(color, x, y, z, id) {
     coords.className = 'coordinates';
     coords.textContent = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Z: ${z.toFixed(2)}`;
 
+
+    const deleteBtn = document.createElement('div');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+
     wrapper.appendChild(colorBox);
     wrapper.appendChild(coords);
+    wrapper.appendChild(deleteBtn);
 
+
+    deleteBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        wrapper.remove();
+        deleteQbit(id); 
+    });
 
     wrapper.addEventListener('click', () => {
         selectQbit(id);
@@ -456,17 +459,48 @@ function createElement(color, x, y, z, id) {
     return wrapper;
 }
 
+function normalize(x, y, z) {
+    const length = Math.sqrt(x * x + y * y + z * z);
+    if (length < 1e-8) return { x: 0, y: 0, z: 0 };
+    return { x: x / length, y: y / length, z: z / length };
+}
+
+
+const vecXInput = document.getElementById('vecX');
+const vecYInput = document.getElementById('vecY');
+const vecZInput = document.getElementById('vecZ');
 
 const listContainer = document.getElementById('listContainer');
+
 const addBtn = document.getElementById('addBtn').addEventListener
     ('click', () => {
-        const randX = (Math.random() * 2 - 1).toFixed(2);
-        const randY = (Math.random() * 2 - 1).toFixed(2);
-        const randZ = (Math.random() * 2 - 1).toFixed(2);
+
+
+        const coordinateX = parseFloat(vecXInput.value);
+        const coordinateY = parseFloat(vecYInput.value);
+        const coordinateZ = parseFloat(vecZInput.value);
+
+        if (isNaN(coordinateX) || isNaN(coordinateY) || isNaN(coordinateZ)) {
+            alert("ahj te butus hat nyilvan kellenek szamok");
+            return;
+        }
+
+        const normalized = normalize(coordinateX, coordinateY, coordinateZ);
+
         const randColor = Math.floor(Math.random() * 0xFFFFFF);
         let randomID = getRandomIntInclusive(100000, 999999);
-        const newElement = createElement(randColor, parseFloat(randX), parseFloat(randY), parseFloat(randZ), randomID);
+        const newElement = createElement(randColor, normalized.x, normalized.y, normalized.z, randomID);
+
         listContainer.appendChild(newElement);
 
-        addNewQbit(randomID, randX, randY, randZ, randColor);
+        addNewQbit(randomID, normalized.x, normalized.y, normalized.z, randColor);
     });
+
+
+const clearBtn = document.getElementById('clearBtn');
+clearBtn.addEventListener('click', () => {
+    Array.from(listContainer.children).forEach(child => {
+        listContainer.removeChild(child);
+    });
+    clear();
+});
