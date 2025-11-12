@@ -116,26 +116,26 @@ export function applyPauliX(bloch) {
   const state = blochToState(bloch);
   const newState = normalize(applyGate(PAULI_X, state));
   const newBloch = stateToBloch(newState);
-  return {bloch: newBloch };
+  return newBloch;
 }
 
 export function applyPauliY(bloch) {
   const state = blochToState(bloch);
   const newState = normalize(applyGate(PAULI_Y, state));
   const newBloch = stateToBloch(newState);
-  return {bloch: newBloch };
+  return newBloch;
 }
 
 export function applyPauliZ(bloch) {
   const state = blochToState(bloch);
   const newState = normalize(applyGate(PAULI_Z, state));
   const newBloch = stateToBloch(newState);
-  return {bloch: newBloch };
+  return newBloch;
 }
 
 export function applyHadamard(bloch) {
   const state = blochToState(bloch);
   const newState = normalize(applyGate(HADAMARD, state));
   const newBloch = stateToBloch(newState);
-  return {bloch: newBloch };
+  return newBloch;
 }
