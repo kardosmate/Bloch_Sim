@@ -1,24 +1,34 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Bloch Sphere Simulator</title>
-
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
-      "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js"
-    }
-  }
-  </script>
-
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bloch Sphere Simulator</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+          "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js"
+        }
+      }
+    </script>
+  </head>
   <style>
     html,body { height:100%; margin:0; }
     canvas { display:block; width:100%; height:100%; }
   </style>
-</head>
-<body>
-  <script type="module" src="./main.js"></script>
-</body>
+  <body style="margin:0; overflow:hidden;">
+    <div id="ui" style="
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  ">
+    <button id="btn1">Gomb 1</button>
+    <button id="btn2">Gomb 2</button>
+    <button id="btn3">Gomb 3</button>
+  </div>
+    <script type="module" src="./main.js"></script>
+  </body>
 </html>
