@@ -7,10 +7,9 @@ const C = (re, im = 0) => ({ re, im });
 function add(a, b) { return C(a.re + b.re, a.im + b.im); }
 function sub(a, b) { return C(a.re - b.re, a.im - b.im); }
 function mul(a, b) {
-  // (a+ib)(c+id) = (ac - bd) + i(ad + bc)
   return C(a.re * b.re - a.im * b.im, a.re * b.im + a.im * b.re);
 }
-function scale(a, k) { // k is real
+function scale(a, k) {
   return C(a.re * k, a.im * k);
 }
 function conj(a) { return C(a.re, -a.im); }
@@ -29,12 +28,10 @@ function isVector(vec) {
 }
 
 // --- Kvantumállapot -> Bloch koordináták ---
-// Ez belső használatra megmarad, {x, y, z} objektumot ad vissza
 export function stateToBloch(state) {
   if (state.length !== 2) throw new Error('Csak egyqubites állapotok támogatottak');
   const [alpha, beta] = state;
 
-  // α*β szorzat
   const alphaConj = conj(alpha);
   const alphaBeta = mul(alphaConj, beta);
 
@@ -42,20 +39,14 @@ export function stateToBloch(state) {
   const y = 2 * alphaBeta.im;
   const z = abs2(alpha) - abs2(beta);
 
-  // MÓDOSÍTVA: Objektum helyett közvetlenül THREE.Vector3-at adunk vissza
   return new THREE.Vector3(x, y, z);
 }
 
 // --- Bloch koordináták -> kvantumállapot ---
-// A bemenet lehet {x,y,z} objektum VAGY THREE.Vector3,
-// mivel mindkettőnek vannak .x, .y, .z tulajdonságai.
 export function blochToState({ x, y, z }) {
-  // Normalizálás biztos ami biztos
   const norm = Math.sqrt(x * x + y * y + z * z);
   
-  // Kezeljük a 0,0,0 esetet (pl. kezdőpont)
   if (norm < 1e-9) {
-    // Alapértelmezett állapot |0> (z=1)
     return [C(1,0), C(0,0)];
   }
 
@@ -94,20 +85,6 @@ function normalize(vec) {
   return vec.map(v => scale(v, norm));
 }
 
-// --- Debug segédfüggvények ---
-function printState(vec) {
-  vec.forEach((c, i) => console.log(`  [${i}] = ${toStr(c)}`));
-  console.log('  norma (összeg |a|^2) =', vec.reduce((acc, x) => acc + abs2(x), 0).toFixed(6));
-  console.log('');
-}
-
-function printBloch(bloch,) {
-  const { x, y, z } = bloch;
-  console.log(`  x = ${x.toFixed(4)}`);
-  console.log(`  y = ${y.toFixed(4)}`);
-  console.log(`  z = ${z.toFixed(4)}`);
-}
-
 // --- Alap bázis vektorok (egy qubit) ---
 export const ket0 = [C(1,0), C(0,0)];
 export const ket1 = [C(0,0), C(1,0)];
@@ -139,6 +116,24 @@ export const HADAMARD = [
   [C(H,0), C(-H,0)]
 ];
 
+export const S_GATE = [
+  [C(1,0), C(0,0)],
+  [C(0,0), C(0,1)]
+];
+
+const T_ANGLE = Math.PI / 4;
+export const T_GATE = [
+  [C(1,0), C(0,0)],
+  [C(0,0), C(Math.cos(T_ANGLE), Math.sin(T_ANGLE))]
+];
+
+export function PHASE_GATE(theta) {
+  return [
+    [C(1,0), C(0,0)],
+    [C(0,0), C(Math.cos(theta), Math.sin(theta))]
+  ];
+}
+
 // --- Gate alkalmazó segédfüggvény ---
 function applyGate(gateMatrix, stateVector) {
   return matrixVectorMultiply(gateMatrix, stateVector);
@@ -151,104 +146,75 @@ export function applyAndConvert(cartesian, gateMatrix) {
 }
 
 // --- FŐ EXPORTÁLT KAPU FÜGGVÉNYEK ---
-// Ezek most THREE.Vector3-at fogadnak és adnak vissza.
 
-/**
- * Pauli-X kapu alkalmazása.
- * @param {THREE.Vector3} blochVec A jelenlegi Bloch vektor.
- * @returns {THREE.Vector3} Az új Bloch vektor a kapu alkalmazása után.
- */
+
 export function applyPauliX(blochVec) {
   if (!(blochVec instanceof THREE.Vector3)) {
     console.warn("Input to applyPauliX is not a THREE.Vector3. Attempting to use as {x,y,z}.");
   }
-  // A blochToState fogadja a Vector3-at, mivel annak van x,y,z tulajdonsága
   const state = blochToState(blochVec);
-  
-  // printState(state); // Debug
   const newState = normalize(applyGate(PAULI_X, state));
-  // printState(newState); // Debug
-  
-  // MÓDOSÍTVA: stateToBloch már Vector3-at ad vissza
   const newBlochVec = stateToBloch(newState);
-  // printBloch(newBlochCoords); // Debug
-  
-  // MÓDOSÍTVA: Közvetlenül visszaadjuk az új vektort
   return newBlochVec;
 }
 
-/**
- * Pauli-Y kapu alkalmazása.
- * @param {THREE.Vector3} blochVec A jelenlegi Bloch vektor.
- * @returns {THREE.Vector3} Az új Bloch vektor a kapu alkalmazása után.
- */
 export function applyPauliY(blochVec) {
   if (!(blochVec instanceof THREE.Vector3)) {
     console.warn("Input to applyPauliY is not a THREE.Vector3. Attempting to use as {x,y,z}.");
   }
   const state = blochToState(blochVec);
   const newState = normalize(applyGate(PAULI_Y, state));
-  // MÓDOSÍTVA: stateToBloch már Vector3-at ad vissza
   const newBlochVec = stateToBloch(newState);
   return newBlochVec;
 }
 
-/**
- * Pauli-Z kapu alkalmazása.
- * @param {THREE.Vector3} blochVec A jelenlegi Bloch vektor.
- * @returns {THREE.Vector3} Az új Bloch vektor a kapu alkalmazása után.
- */
 export function applyPauliZ(blochVec) {
   if (!(blochVec instanceof THREE.Vector3)) {
     console.warn("Input to applyPauliZ is not a THREE.Vector3. Attempting to use as {x,y,z}.");
   }
   const state = blochToState(blochVec);
   const newState = normalize(applyGate(PAULI_Z, state));
-  // MÓDOSÍTVA: stateToBloch már Vector3-at ad vissza
   const newBlochVec = stateToBloch(newState);
   return newBlochVec;
 }
 
-/**
- * Hadamard kapu alkalmazása.
- * @param {THREE.Vector3} blochVec A jelenlegi Bloch vektor.
- * @returns {THREE.Vector3} Az új Bloch vektor a kapu alkalmazása után.
- */
 export function applyHadamard(blochVec) {
   if (!(blochVec instanceof THREE.Vector3)) {
     console.warn("Input to applyHadamard is not a THREE.Vector3. Attempting to use as {x,y,z}.");
   }
   const state = blochToState(blochVec);
   const newState = normalize(applyGate(HADAMARD, state));
-  // MÓDOSÍTVA: stateToBloch már Vector3-at ad vissza
   const newBlochVec = stateToBloch(newState);
   return newBlochVec;
 }
 
-// --- EGYSZERŰ TESZT ---
-function runTest() {
-  console.log("--- Futtatom a Pauli-Z tesztet ---");
-  
-  // Kezdő állapot: |+> állapot (x=1, y=0, z=0)
-  const initialStateVec = new THREE.Vector3(1, 0, 0);
-  console.log("Kezdő vektor (|+>):", initialStateVec.x, initialStateVec.y, initialStateVec.z);
-  
-  // Várható állapot: |-> állapot (x=-1, y=0, z=0)
-  // Mivel Z|+> = |->
-  
-  const finalStateVec = applyPauliZ(initialStateVec);
-  
-  console.log("Vektor Pauli-Z alkalmazása után (várható |->):", finalStateVec.x.toFixed(4), finalStateVec.y.toFixed(4), finalStateVec.z.toFixed(4));
-
-  // Ellenőrzés
-  if (Math.abs(finalStateVec.x - (-1)) < 1e-9 && Math.abs(finalStateVec.y) < 1e-9 && Math.abs(finalStateVec.z) < 1e-9) {
-    console.log("TESZT SIKERES: |+> -> |->");
-  } else {
-    console.error("TESZT SIKERTELEN!");
+export function applySGate(blochVec) {
+  if (!(blochVec instanceof THREE.Vector3)) {
+    console.warn("Input to applySGate is not a THREE.Vector3. Attempting to use as {x,y,z}.");
   }
-  console.log("------------------------------------");
+  const state = blochToState(blochVec);
+  const newState = normalize(applyGate(S_GATE, state));
+  const newBlochVec = stateToBloch(newState);
+  return newBlochVec;
 }
 
-// Teszt futtatása (a modul betöltésekor)
-// Ezt a sort megjegyzésbe teheted, ha nem akarod, hogy automatikusan lefusson importáláskor.
-runTest();
+export function applyTGate(blochVec) {
+  if (!(blochVec instanceof THREE.Vector3)) {
+    console.warn("Input to applyTGate is not a THREE.Vector3. Attempting to use as {x,y,z}.");
+  }
+  const state = blochToState(blochVec);
+  const newState = normalize(applyGate(T_GATE, state));
+  const newBlochVec = stateToBloch(newState);
+  return newBlochVec;
+}
+
+export function applyPhaseGate(blochVec, theta) {
+  if (!(blochVec instanceof THREE.Vector3)) {
+    console.warn("Input to applyPhaseGate is not a THREE.Vector3. Attempting to use as {x,y,z}.");
+  }
+  const state = blochToState(blochVec);
+  const phaseGateMatrix = PHASE_GATE(theta);
+  const newState = normalize(applyGate(phaseGateMatrix, state));
+  const newBlochVec = stateToBloch(newState);
+  return newBlochVec;
+}
