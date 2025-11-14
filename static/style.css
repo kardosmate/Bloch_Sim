@@ -233,23 +233,61 @@ body.light .element:hover {
 
 
 .delete-btn {
-    display: flex; 
+    display: flex;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
+    cursor: pointer;
+    color: #800202; 
+    font-size: 20px;
+    transition: color 0.2s ease, transform 0.2s ease;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+}
+
+.delete-btn:hover {
+     color: #ff3333;
+     transform: scale(1.1);
+}
+
+.fa-solid.fa-trash-can {
+    pointer-events: none;
+}
+
+
+.reset-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     color: #ff6666;
     font-size: 20px;
     transition: color 0.2s ease, transform 0.2s ease;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 8px;
 }
 
-    .delete-btn:hover {
+    .reset-btn:hover {
         color: #ff3333;
         transform: scale(1.1);
     }
 
-.fa-solid.fa-trash-can {
+
+body.dark .fa-solid.fa-rotate-left {
     pointer-events: none;
+    color: white;
+}
+
+
+body.light .fa-solid.fa-rotate-left {
+    pointer-events: none;
+    color: #42a5f5;
+}
+
+.action-btns {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0px;
 }

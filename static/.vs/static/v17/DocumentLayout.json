@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\math.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -36,20 +36,20 @@
               "RelativeDocumentMoniker": "style.css",
               "ToolTip": "C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\style.css",
               "RelativeToolTip": "style.css",
-              "ViewState": "AQIAAOEAAAAAAAAAAAAAAPEAAAAxAAAA",
+              "ViewState": "AQIAAOEAAAAAAAAAAAAAAPMAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2025-11-12T15:02:28.012Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "index.html",
               "DocumentMoniker": "C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\index.html",
               "RelativeDocumentMoniker": "index.html",
               "ToolTip": "C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\index.html",
               "RelativeToolTip": "index.html",
-              "ViewState": "AQIAABUAAAAAAAAAAAAAACIAAAAAAAAA",
+              "ViewState": "AQIAADcAAAAAAAAAAAAgwCIAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2025-11-12T14:55:34.395Z",
               "EditorCaption": ""
@@ -62,20 +62,20 @@
               "RelativeDocumentMoniker": "math.js",
               "ToolTip": "C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\math.js",
               "RelativeToolTip": "math.js",
-              "ViewState": "AQIAACkAAAAAAAAAAADwvzMAAAAdAAAA",
+              "ViewState": "AQIAAGQAAAAAAAAAAAAiwG0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2025-11-12T14:55:33.364Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "main.js",
               "DocumentMoniker": "C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\main.js",
               "RelativeDocumentMoniker": "main.js",
               "ToolTip": "C:\\Users\\loxom\\Desktop\\Bloch_Sim\\static\\main.js",
               "RelativeToolTip": "main.js",
-              "ViewState": "AQIAAKwBAAAAAAAAAAAIwMQBAAAHAAAA",
+              "ViewState": "AQIAALYBAAAAAAAAAAAtwMYBAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2025-11-12T14:53:34.3Z",
               "EditorCaption": ""

@@ -345,11 +345,8 @@ function applyGate(gate) {
   sQ.refresh();
 }
 
-function reset() {
-  if(selectedQbit == null)
-    return;
-
-  let sQ = getQbit(selectedQbit);
+function reset(id) {
+  let sQ = getQbit(id);
   sQ.current = sQ.initial.clone();
   sQ.refresh();
 }
@@ -441,15 +438,35 @@ function createElement(color, x, y, z, id) {
     deleteBtn.className = 'delete-btn';
     deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
 
-    wrapper.appendChild(colorBox);
+
+    const resetBtn = document.createElement('div');
+    resetBtn.className = 'reset-btn';
+    resetBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i>';
+
+    const actionBtns = document.createElement('div');
+    actionBtns.className = 'action-btns';
+
+    actionBtns.appendChild(deleteBtn);
+    actionBtns.appendChild(resetBtn);
+
+    wrapper.appendChild(colorBox);  
     wrapper.appendChild(coords);
-    wrapper.appendChild(deleteBtn);
+
+
+    wrapper.appendChild(actionBtns);
 
 
     deleteBtn.addEventListener('click', (event) => {
         event.stopPropagation();
         wrapper.remove();
         deleteQbit(id); 
+    });
+
+
+
+    resetBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        reset(id);
     });
 
     wrapper.addEventListener('click', () => {
@@ -496,11 +513,3 @@ const addBtn = document.getElementById('addBtn').addEventListener
         addNewQbit(randomID, normalized.x, normalized.y, normalized.z, randColor);
     });
 
-
-const clearBtn = document.getElementById('clearBtn');
-clearBtn.addEventListener('click', () => {
-    Array.from(listContainer.children).forEach(child => {
-        listContainer.removeChild(child);
-    });
-    clear();
-});
