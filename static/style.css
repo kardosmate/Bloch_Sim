@@ -306,14 +306,12 @@ body.light .fa-solid.fa-rotate-left {
             border-color: #2196f3;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-input[type=number],
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -moz-appearance: none;
+input[type=number] {
+    -moz-appearance:textfield;
 }
