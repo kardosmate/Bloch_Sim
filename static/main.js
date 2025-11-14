@@ -523,8 +523,8 @@ const addBtn = document.getElementById('addBtn').addEventListener
         }
 
 
-        if (coordinateX == 0 || coordinateY==0 || coordinateZ==0) {
-            alert("Please give a non null vektor");
+        if (coordinateX == 0 && coordinateY==0 && coordinateZ==0) {
+            alert("Please give a non null vector");
             return;
         }
 
