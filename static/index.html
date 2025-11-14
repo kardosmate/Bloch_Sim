@@ -20,19 +20,26 @@
     </script>
 </head>
 <body class="dark" style="margin:0; overflow:hidden;">
+    <div id="creator-info">
+        <i class="fa-solid fa-circle-info"></i>
+        <span class="tooltip">
+            Created by: <br />
+            Kardos Máté <br />
+            Kovács István <br />
+            Szakács Olivér
+        </span>
+    </div>
 
     <div id="ui-container" class="closed">
         <div style="height:60px;"></div>
         <button class="fancy-btn" id="themeBtn">Light/Dark Mode</button>
 
         <div class="vector-inputs">
-            <label>X: <input type="number" id="vecX"  min="-1" max="1" value="0"></label>
-            <label>Y: <input type="number" id="vecY"  min="-1" max="1" value="0"></label>
-            <label>Z: <input type="number" id="vecZ"  min="-1" max="1" value="0"></label>
+            <label>X: <input type="number" id="vecX" min="-1" max="1" value="0"></label>
+            <label>Y: <input type="number" id="vecY" min="-1" max="1" value="0"></label>
+            <label>Z: <input type="number" id="vecZ" min="-1" max="1" value="0"></label>
         </div>
-        <button id="addBtn" class="fancy-btn">+ Add new vector</button>
-
-
+        <button id="addBtn" class="fancy-btn">Add new vector</button>
 
         <div class="gate-buttons">
             <button class="fancy-btn" data-gate="X" id="x-gate-btn">X</button>
@@ -42,21 +49,22 @@
             <button class="fancy-btn" data-gate="H" id="s-gate-btn">S</button>
             <div class="fancy-btn ph-container" id="ph-gate-btn">
                 <span>PH</span>
-                <input type="number" id="phase-degrees" min="0" max="6.28" value="1.57" placeholder="0" maxlength="4">
+                <input type="number" id="phase-degrees" value="180" placeholder="0" maxlength="4">
             </div>
         </div>
 
         <div id="listContainer" class="list"></div>
+        <button id="clearBtn" class="fancy-btn">Clear all vectors</button>
     </div>
 
-  <button id="toggleBtn">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
+    <button id="toggleBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
 
-  <script type="module" src="./main.js"></script>
+    <script type="module" src="./main.js"></script>
 
 </body>
 </html>
