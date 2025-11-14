@@ -291,27 +291,39 @@ body.light .fa-solid.fa-rotate-left {
 }
 
 
-    .ph-container input {
-        width: 4ch; 
-        padding: 4px 6px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 13px;
-        text-align: center;
-        transition: border-color 0.2s ease;
-    }
+.ph-container input {
+    width: 4ch; 
+    padding: 4px 6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    text-align: center;
+    transition: border-color 0.2s ease;
+}
+
+body.light .ph-container input {
+  background: white;
+}
+
+body.dark .ph-container input {
+  background: #555555;
+  color: white;
+  border: 0px solid #333333;
+}
 
 .ph-container input:focus {
             outline: none;
             border-color: #2196f3;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
 input[type=number] {
+    -moz-appearance:textfield;
+}
     -moz-appearance: none;
 }

@@ -172,7 +172,17 @@ scene.add(sphereMesh);
 // small helper objects so you can perceive rotation / zoom
 // Grid helper size scaled up for better viewing
 let grid = new THREE.GridHelper(5, 10, 0x606060, 0x404040);
+grid.rotation.x = Math.PI / 2;
 scene.add(grid);
+
+const axesArrowOpts = {
+    shaftRadius: 0.005,
+    headLength: 0.03,
+    headRadius: 0.015
+};
+drawVector(scene, new THREE.Vector3(0.3,0,0), new THREE.Color(0xff0000), axesArrowOpts);
+drawVector(scene, new THREE.Vector3(0,0.3,0), new THREE.Color(0x00ff00), axesArrowOpts);
+drawVector(scene, new THREE.Vector3(0,0,0.3), new THREE.Color(0x0000ff), axesArrowOpts);
 
 
 // Center sphere size is now half of its original small size (0.05 / 2 = 0.025)
@@ -239,7 +249,8 @@ const camera = new THREE.OrthographicCamera(
     orthoSize, -orthoSize,
     0.1, 1000
 );
-camera.position.set(2.5, 2.5, 2.5); 
+camera.up.set(0,0,1);
+camera.position.set(-2.5, -2.5, 2.5); 
 camera.lookAt(0,0,0);
 
 // ------------- Controls (rotate around target + zoom to target) -------------
@@ -263,8 +274,6 @@ function onResize() {
   camera.top = halfHeight;
   camera.bottom = -halfHeight;
   camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 window.addEventListener('resize', onResize, false);
 onResize();
@@ -272,7 +281,9 @@ onResize();
 function animate() {
   requestAnimationFrame(animate);
   controls.update();    // required for damping
+  renderer.setViewport(0,0, window.innerWidth, window.innerHeight);
   renderer.render(scene, camera);
+  
 }
 animate();
 
@@ -387,8 +398,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sbutton = document.getElementById('s-gate-btn');
     const phbutton = document.getElementById('ph-gate-btn');
 
-    let degree = document.getElementById('phase-degrees');
-
     toggleBtn.addEventListener('click', () => {
         uiContainer.classList.toggle('closed');
         toggleBtn.classList.toggle('open');
@@ -401,11 +410,13 @@ document.addEventListener('DOMContentLoaded', () => {
           scene.background = new THREE.Color(0xF0F0F0);
           scene.remove(grid);
           grid = new THREE.GridHelper(5, 10, 0xB0B0B0, 0xD0D0D0);
+          grid.rotation.x = Math.PI / 2;
           scene.add(grid);
         } else {  
           scene.background = new THREE.Color(0x303030);
           scene.remove(grid);
           grid = new THREE.GridHelper(5, 10, 0x606060, 0x404040);
+          grid.rotation.x = Math.PI / 2;
           scene.add(grid);
         }
     });
@@ -416,7 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
     zbutton.addEventListener('click', () => applyGate(QMath.PAULI_Z));
     hbutton.addEventListener('click', () => applyGate(QMath.HADAMARD));
     sbutton.addEventListener('click', () => applyGate(QMath.S_GATE));
-    phbutton.addEventListener('click', () => applyGate(QMath.PHASE_GATE(degree)));
+    phbutton.addEventListener('click', () => {
+        let degree = document.getElementById('phase-degrees').value;
+        applyGate(QMath.PHASE_GATE(degree / 180.0 * Math.PI));
+    });
 
 });
 
