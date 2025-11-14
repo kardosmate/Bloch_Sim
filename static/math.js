@@ -134,7 +134,6 @@ export function PHASE_GATE(theta) {
   ];
 }
 
-// --- Gate alkalmazó segédfüggvény ---
 function applyGate(gateMatrix, stateVector) {
   return matrixVectorMultiply(gateMatrix, stateVector);
 }
