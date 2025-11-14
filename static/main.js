@@ -406,7 +406,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    resetBtn.addEventListener('click', () => reset());
 
     xbutton.addEventListener('click', () => applyGate(QMath.PAULI_X));
     ybutton.addEventListener('click', () => applyGate(QMath.PAULI_Y));
