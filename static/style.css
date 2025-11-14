@@ -40,6 +40,7 @@ body.dark {
     opacity: 1;
     visibility: visible;
     transition: opacity 0.3s ease, visibility 0.3s ease, background 0.3s ease;
+    overflow:visible;
 }
 
 #ui-container.closed {
@@ -87,7 +88,7 @@ body.dark {
 .fancy-btn {
     background: linear-gradient(135deg, #42a5f5, #1e88e5);
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 10px 16px;
     color: #fff;
     font-weight: bold;
@@ -131,7 +132,7 @@ body.dark {
 
 .gate-buttons {
     display: flex;
-    gap: 8px;
+    gap: 4px;
 }
 
 body.dark #ui-container {
@@ -169,6 +170,7 @@ body.dark .selectedVector {
     max-height: 300px;
     overflow-y: auto;
     padding-right: 6px;
+    overflow-x: visible;
 }
 
 .element {
@@ -254,18 +256,7 @@ body.light .element:hover {
 }
 
 
-.reset-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #ff6666;
-    font-size: 20px;
-    transition: color 0.2s ease, transform 0.2s ease;
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
-}
+
 
     .reset-btn:hover {
         color: #ff3333;
@@ -289,4 +280,38 @@ body.light .fa-solid.fa-rotate-left {
     justify-content: flex-end;
     align-items: center;
     gap: 0px;
+}
+
+
+.ph-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+
+    .ph-container input {
+        width: 4ch; 
+        padding: 4px 6px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 13px;
+        text-align: center;
+        transition: border-color 0.2s ease;
+    }
+
+.ph-container input:focus {
+            outline: none;
+            border-color: #2196f3;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }

@@ -21,17 +21,18 @@
 </head>
 <body class="dark" style="margin:0; overflow:hidden;">
 
-  <!-- Bal oldali panel -->
     <div id="ui-container" class="closed">
         <div style="height:60px;"></div>
         <button class="fancy-btn" id="themeBtn">Light/Dark Mode</button>
 
         <div class="vector-inputs">
-            <label>X: <input type="number" id="vecX" step="0.01" min="-1" max="1" value="0"></label>
-            <label>Y: <input type="number" id="vecY" step="0.01" min="-1" max="1" value="0"></label>
-            <label>Z: <input type="number" id="vecZ" step="0.01" min="-1" max="1" value="0"></label>
+            <label>X: <input type="number" id="vecX"  min="-1" max="1" value="0"></label>
+            <label>Y: <input type="number" id="vecY"  min="-1" max="1" value="0"></label>
+            <label>Z: <input type="number" id="vecZ"  min="-1" max="1" value="0"></label>
         </div>
         <button id="addBtn" class="fancy-btn">+ Add new vector</button>
+
+
 
         <div class="gate-buttons">
             <button class="fancy-btn" data-gate="X" id="x-gate-btn">X</button>
@@ -39,8 +40,10 @@
             <button class="fancy-btn" data-gate="Z" id="z-gate-btn">Z</button>
             <button class="fancy-btn" data-gate="H" id="h-gate-btn">H</button>
             <button class="fancy-btn" data-gate="H" id="s-gate-btn">S</button>
-            <button class="fancy-btn" data-gate="H" id="ph-gate-btn">PH</button>
-
+            <div class="fancy-btn ph-container" id="ph-gate-btn">
+                <span>PH</span>
+                <input type="number" id="phase-degrees" min="0" max="6.28" value="1.57" placeholder="0" maxlength="4">
+            </div>
         </div>
 
         <div id="listContainer" class="list"></div>

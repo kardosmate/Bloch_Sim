@@ -389,6 +389,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const ybutton = document.getElementById('y-gate-btn');
     const zbutton = document.getElementById('z-gate-btn');
     const hbutton = document.getElementById('h-gate-btn');
+    const sbutton = document.getElementById('s-gate-btn');
+    const phbutton = document.getElementById('ph-gate-btn');
+
+    let degree = document.getElementById('phase-degrees');
 
     toggleBtn.addEventListener('click', () => {
         uiContainer.classList.toggle('closed');
@@ -418,6 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ybutton.addEventListener('click', () => applyGate(QMath.PAULI_Y));
     zbutton.addEventListener('click', () => applyGate(QMath.PAULI_Z));
     hbutton.addEventListener('click', () => applyGate(QMath.HADAMARD));
+    sbutton.addEventListener('click', () => applyGate(QMath.S_GATE));
+    phbutton.addEventListener('click', () => applyGate(QMath.PHASE_GATE(degree)));
+
 });
 
 function getRandomIntInclusive(min, max) {
@@ -447,7 +454,8 @@ function createElement(color, x, y, z, id) {
 
     const resetBtn = document.createElement('div');
     resetBtn.className = 'reset-btn';
-    resetBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i>';
+    resetBtn.innerHTML = `<i class="fa-solid fa-rotate-left"></i>`;
+
 
     const actionBtns = document.createElement('div');
     actionBtns.className = 'action-btns';
@@ -467,7 +475,6 @@ function createElement(color, x, y, z, id) {
         wrapper.remove();
         deleteQbit(id); 
     });
-
 
 
     resetBtn.addEventListener('click', (event) => {
@@ -508,6 +515,12 @@ const addBtn = document.getElementById('addBtn').addEventListener
             return;
         }
 
+
+        if (coordinateX == 0 || coordinateY==0 || coordinateZ==0) {
+            alert("Please give a non null vektor");
+            return;
+        }
+
         const normalized = normalize(coordinateX, coordinateY, coordinateZ);
 
         const randColor = Math.floor(Math.random() * 0xFFFFFF);
@@ -519,3 +532,16 @@ const addBtn = document.getElementById('addBtn').addEventListener
         addNewQbit(randomID, normalized.x, normalized.y, normalized.z, randColor);
     });
 
+
+const phaseInput = document.getElementById('phase-degrees');
+
+phaseInput.addEventListener('input', () => {
+    if (phaseInput.value.length > 3) {
+        phaseInput.value = phaseInput.value.slice(0, 3);
+    }
+});
+
+
+phaseInput.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
