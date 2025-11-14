@@ -175,8 +175,14 @@ let grid = new THREE.GridHelper(5, 10, 0x606060, 0x404040);
 grid.rotation.x = Math.PI / 2;
 scene.add(grid);
 
-let axes = new THREE.AxesHelper(0.5);
-scene.add(axes);
+const axesArrowOpts = {
+    shaftRadius: 0.005,
+    headLength: 0.03,
+    headRadius: 0.015
+};
+drawVector(scene, new THREE.Vector3(0.3,0,0), new THREE.Color(0xff0000), axesArrowOpts);
+drawVector(scene, new THREE.Vector3(0,0.3,0), new THREE.Color(0x00ff00), axesArrowOpts);
+drawVector(scene, new THREE.Vector3(0,0,0.3), new THREE.Color(0x0000ff), axesArrowOpts);
 
 
 // Center sphere size is now half of its original small size (0.05 / 2 = 0.025)
@@ -392,8 +398,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sbutton = document.getElementById('s-gate-btn');
     const phbutton = document.getElementById('ph-gate-btn');
 
-    let degree = document.getElementById('phase-degrees');
-
     toggleBtn.addEventListener('click', () => {
         uiContainer.classList.toggle('closed');
         toggleBtn.classList.toggle('open');
@@ -423,7 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
     zbutton.addEventListener('click', () => applyGate(QMath.PAULI_Z));
     hbutton.addEventListener('click', () => applyGate(QMath.HADAMARD));
     sbutton.addEventListener('click', () => applyGate(QMath.S_GATE));
-    phbutton.addEventListener('click', () => applyGate(QMath.PHASE_GATE(degree)));
+    phbutton.addEventListener('click', () => {
+        let degree = document.getElementById('phase-degrees').value;
+        applyGate(QMath.PHASE_GATE(degree / 180.0 * Math.PI));
+    });
 
 });
 
