@@ -1,0 +1,92 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\geometry{a4paper, margin=1in}
+
+\title{Rendszerarchitektúra: Qbit modell és UI integráció}
+\author{}
+\date{}
+
+\begin{document}
+	
+	\maketitle
+	
+	\section{Áttekintés}
+	A rendszer két fő rétegből áll: 
+	
+	\begin{itemize}
+		\item \textbf{Adatréteg (Qbit modellek)}
+		\item \textbf{UI réteg (DOM elemek + interakciók)}
+	\end{itemize}
+	
+	A rétegeket folyamatos, kétirányú frissítés köti össze, amelyet főként a \texttt{refresh()} és különböző listenerek koordinálnak.
+	
+	\section{Adatréteg (Model) --- Qbit}
+	A \textbf{Qbit} a rendszer központi adatmodellje.
+	
+	\subsection{Főbb metódusok}
+	\begin{itemize}
+		\item \texttt{refresh()} -- gondoskodik a modell, a UI és a 3D scene szinkronizációjáról:
+		\begin{enumerate}
+			\item Törli a régi 3D objektumot a scene-ből.
+			\item Újrarajzolja a frissített vektort.
+			\item Meghívja az UI frissítőt: \texttt{updateCoordinates(id, current)}.
+		\end{enumerate}
+		\item \texttt{reset()}, \texttt{remove()} és a kapu alkalmazása után mindig \texttt{refresh()} fut.
+	\end{itemize}
+	
+	\section{UI réteg --- DOM elemek}
+	A \texttt{createElement(...)} minden Qbithez létrehoz:
+	
+	\begin{itemize}
+		\item Színdobozt
+		\item Koordináta sort
+		\item Reset és törlés gombot
+	\end{itemize}
+	
+	\noindent Minden DOM elem az \texttt{id} alapján kapcsolódik a megfelelő Qbithoz a modellben. A DOM nem számol, csak kijelöl, indít, és tükrözi a modell változásait.
+	
+	\section{Listenerek}
+	A listenerek a rendszer egyik legfontosabb részei, mivel összekapcsolják a felhasználói lépéseket a modell műveleteivel.
+	
+	\subsection{Regisztráció}
+	A \texttt{RegisterListeners()} a betöltéskor hívódik meg, és az alábbi eseményeket köti:
+	
+	\begin{itemize}
+		\item Kapu gombok (\texttt{X, Y, Z, H, S, Phase})
+		\item \texttt{Add} gomb
+		\item \texttt{Clear all} gomb
+		\item Téma váltó
+		\item Koordináta inputok
+		\item Reset/Törlés gombok és wrapper kattintások a DOM listaelemein
+	\end{itemize}
+	
+	\subsection{Model $\rightarrow$ UI visszacsatolás}
+	Minden frissítés végén a listenerek \textbf{nem frissítik manuálisan a DOM-ot}.  
+	A modell maga kezeli a DOM frissítését, lentebb látható egy példa hogy hogyan:
+	
+	\begin{itemize}
+		\item \texttt{refresh()} $\rightarrow$ \texttt{updateCoordinates(...)}
+	\end{itemize}
+	
+	\noindent Így a UI soha nem írja felül hibásan a modell értékeit.
+	
+	\section{CSS rövid összefoglaló}
+	A rendszer felhasználói felületét modern, két témás (light/dark) stílus jellemzi amiket futás közben tudunk változtatni:
+	
+	\begin{itemize}
+		\item \textbf{Alap:} teljes képernyős layout, Arial betű, light/dark témák háttér- és színbeállításokkal.
+		\item \textbf{UI konténer (\#ui-container):} bal felső sarok, flex oszlop, lekerekített sarkok, árnyék, animált nyitás/bezárás.
+		\item \textbf{Gombok:} .fancy-btn gradienttel, hover/active animáció, kapu gombok (X, Y, Z, H, S, PH input).
+		\item \textbf{Listaelemek (\#listContainer .element):} flex, lekerekített sarkok, témától függő színek, hover effekt, görgethető.
+		\item \textbf{Műveletek:} .delete-btn és .reset-btn hover animáció, ikonok pointer-events: none.
+		\item \textbf{Scene:} A Scene és a gömb a kiválasztott téma színeiben jelenik meg, és az egész képernyőt lefedi.
+		
+		
+	\end{itemize}
+	
+\end{document}
