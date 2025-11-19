@@ -89,4 +89,215 @@
 		
 	\end{itemize}
 	
+	\section{Matematikai modell és implementáció}
+	
+	\subsection{Komplex számok}
+	A kvantumállapotok és kapuk komplex amplitúdókkal dolgoznak.
+	A megvalósításban minden komplex szám egy:
+	
+	\[
+	a = \{ \mathrm{re}: \alpha, \ \mathrm{im}: \beta \}
+	\]
+	
+	objektum.
+	
+	A fő műveletek:
+	
+	\begin{itemize}
+		\item összeadás: \( a + b \)
+		\item kivonás: \( a - b \)
+		\item szorzás: 
+		\[
+		(a+ib)(c+id) = (ac - bd) + i(ad + bc)
+		\]
+		\item konjugálás: \( a^\ast = \mathrm{re} - i\,\mathrm{im} \)
+		\item abszolút érték négyzete: \( |a|^2 = \mathrm{re}^2 + \mathrm{im}^2 \)
+	\end{itemize}
+	
+	Ezek építőkockaként szolgálnak minden vektor- és mátrixművelethez.
+	
+	\subsection{Kvantumállapot reprezentáció}
+	Egy egyqubites állapot a szokásos bázisban:
+	
+	\[
+	|\psi\rangle = 
+	\begin{pmatrix}
+		\alpha \\ \beta
+	\end{pmatrix}, 
+	\qquad |\alpha|^2 + |\beta|^2 = 1.
+	\]
+	
+	A programban ez a következő formában jelenik meg:
+	
+	\texttt{[C(re\_alpha,im\_alpha), C(re\_beta,im\_beta)]}
+	
+	\subsection{Bloch-gömb konverzió}
+	A Bloch-gömb egy valós 3D vektort rendel minden tiszta egyqubites állapothoz:
+	\[
+	x = 2 \Re(\alpha^\ast \beta),\qquad
+	y = 2 \Im(\alpha^\ast \beta),\qquad
+	z = |\alpha|^2 - |\beta|^2.
+	\]
+	
+	A következőkben lépésről lépésre elmagyarázzuk, hogyan és miért működik ez a leképezés, valamint hogyan lehet stabilan implementálni a gyakorlatban.
+	
+	\subsubsection*{Miért létezik ez a leképezés?}
+	Egy egyqubites állapotot felírhatunk
+	\[
+	|\psi\rangle=\begin{pmatrix}\alpha\\\beta\end{pmatrix},\qquad |\alpha|^2+|\beta|^2=1.
+	\]
+	A kvantummechanika szerint a globális fázis nem mérhető, azaz az állapotok közti különbség csak az amplitúdók relatív fázisának és arányának függvénye. Ezt a két szabadságfokot a Bloch-gömb pontja (\(x,y,z\)) kifejezi: a gömb két szöge (\(\theta,\phi\)) egyértelműen leírja az állapotot a globális fázis figyelmen kívül hagyásával.
+	
+	\subsubsection*{Állapot \(\rightarrow\) Bloch:}
+	Számítsuk ki a Bloch-koordinátákat:
+	\[
+	\alpha^\ast\beta = |\alpha||\beta| e^{i(\arg\beta-\arg\alpha)}.
+	\]
+	Ennek a valós és képzetes részei adják \(x/2\) és \(y/2\). A \(z\) komponens a bázisállapotok foglaltságkülönbségét méri:
+	\[
+	z = |\alpha|^2 - |\beta|^2.
+	\]
+	
+	Ezek az összefüggések közvetlenül vezetnek a \texttt{stateToBloch()} implementációhoz: először kiszámoljuk \(\alpha^\ast\beta\)-t (komplex konjugál és szorzat), majd \(x,y,z\)-t a fenti formulák szerint, és visszaadjuk \(\mathrm{THREE.Vector3}(x,y,z)\)-ként.
+	
+	\subsubsection*{Bloch \(\rightarrow\) állapot:}
+	A Bloch-vektor pontjai a gömbön a szögekkel kapcsolatos egyszerű trigonometriai összefüggésekkel írhatók fel:
+	\[
+	z=\cos\theta,\qquad x=\sin\theta\cos\phi,\qquad y=\sin\theta\sin\phi,
+	\]
+	ahonnan
+	\[
+	\theta=\arccos(z),\qquad \phi=\operatorname{atan2}(y,x).
+	\]
+	Ezek után egy kényelmes és gyakran használt választás (a globális fázis rögzítése érdekében) a következő állapot:
+	\[
+	\alpha=\cos\frac{\theta}{2},\qquad
+	\beta=e^{i\phi}\sin\frac{\theta}{2}.
+	\]
+	Ez kielégíti a normálási feltételt, és a relatív fázist \(\phi\)-ként helyezi el a \(\beta\) komponensben.
+	
+	\subsubsection*{Miért elég ez a formula?}
+	A trigonometriai azonosságok miatt:
+	\[
+	|\alpha|^2 = \cos^2\frac{\theta}{2} = \frac{1+\cos\theta}{2} = \frac{1+z}{2},
+	\]
+	\[
+	|\beta|^2 = \sin^2\frac{\theta}{2} = \frac{1-\cos\theta}{2} = \frac{1-z}{2},
+	\]
+	és
+	\[
+	2\Re(\alpha^\ast\beta)=2\cos\frac{\theta}{2}\sin\frac{\theta}{2}\cos\phi = \sin\theta\cos\phi = x,
+	\]
+	\[
+	2\Im(\alpha^\ast\beta)=\sin\theta\sin\phi = y.
+	\]
+	Tehát a fenti \(\alpha,\beta\) visszavezeti pontosan az eredeti \(x,y,z\)-et (globális fázis nélkül).
+	
+	\subsection{Mátrixszorzás és normalizálás}
+	A kvantumkapuk \(2\times2\)-es komplex mátrixok, amelyeket egy állapotra
+	a szokásos mátrixszorzással alkalmazunk:
+	
+	\[
+	|\psi'\rangle = U|\psi\rangle.
+	\]
+	
+	A \texttt{matrixVectorMultiply()} függvény ezt általánosan kezeli.
+	Minden eredmény végül normalizált lesz:
+	
+	\[
+	|\psi\rangle \leftarrow \frac{|\psi\rangle}{\sqrt{|\alpha|^2 + |\beta|^2}}.
+	\]
+
+	\subsection{Kvantumkapuk}
+	
+	\begin{itemize}
+		\item Pauli X:
+		\[
+		X = 
+		\begin{pmatrix}
+			0 & 1\\
+			1 & 0
+		\end{pmatrix}
+		\]
+		\item Pauli Y:
+		\[
+		Y = 
+		\begin{pmatrix}
+			0 & -i\\
+			i & 0
+		\end{pmatrix}
+		\]
+		\item Pauli Z:
+		\[
+		Z =
+		\begin{pmatrix}
+			1 & 0\\
+			0 & -1
+		\end{pmatrix}
+		\]
+		\item Hadamard:
+		\[
+		H = \frac{1}{\sqrt{2}}
+		\begin{pmatrix}
+			1 & 1\\
+			1 & -1
+		\end{pmatrix}
+		\]
+		\item S-kapu (fázis \(\pi/2\)):
+		\[
+		S = P\!\left(\tfrac{\pi}{2}\right)=
+		\begin{pmatrix}
+			1 & 0\\[4pt]
+			0 & e^{i\pi/2}
+		\end{pmatrix} =
+		\begin{pmatrix}
+			1 & 0\\[4pt]
+			0 & i
+		\end{pmatrix}
+		\]
+		\item T-kapu (fázis \(\pi/4\)):
+		\[
+		T = P\!\left(\tfrac{\pi}{4}\right)=
+		\begin{pmatrix}
+			1 & 0\\[4pt]
+			0 & e^{i\pi/4}
+		\end{pmatrix}
+		\]
+		\item Általános fáziskapu:
+		\[
+		P(\theta) = 
+		\begin{pmatrix}
+			1 & 0\\
+			0 & e^{i\theta}
+		\end{pmatrix}
+		\]
+	\end{itemize}
+	
+	Minden kapu alkalmazásának lépései:
+	
+	\begin{enumerate}
+		\item Bloch-vektor visszaalakítása kvantumállapottá.
+		\item Mátrixszorzás a kapumátrixszal.
+		\item Normalizálás.
+		\item Visszakonvertálás Bloch-vektorra.
+	\end{enumerate}
+	
+	\subsection{Kapuk alkalmazása Bloch-gömbre}
+	A 3D vizualizáció csak Bloch-koordinátákkal dolgozik, ezért a kapuk
+	\textbf{Bloch → állapot → kapu → állapot → Bloch} módon működnek.
+	
+	Például az X-kapu:
+	
+	\[
+	(x,y,z) \xrightarrow{\text{Bloch→state}}
+	|\psi\rangle \xrightarrow{X}
+	X|\psi\rangle \xrightarrow{\text{state→Bloch}}
+	(x',y',z').
+	\]
+	
+	Ez biztosítja, hogy a 3D vizualizáció és a matematikai modell mindig
+	pontos összhangban legyen.
+	
+	
+	
 \end{document}
