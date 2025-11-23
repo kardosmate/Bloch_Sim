@@ -5,91 +5,64 @@
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
 \geometry{a4paper, margin=1in}
 
-\title{Rendszerarchitektúra: Qbit modell és UI integráció}
-\author{}
-\date{}
+\title{Dokumentáció: Bloch-gömb szimulátor}
+\author{Kardos Máté (??????), Kovács István (CQ7ZA1), Szakács Olivér (GAA9DD)}
+\date{\today}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
 
 \begin{document}
 	
 	\maketitle
 	
 	\section{Áttekintés}
-	A rendszer két fő rétegből áll: 
-	
-	\begin{itemize}
-		\item \textbf{Adatréteg (Qbit modellek)}
-		\item \textbf{UI réteg (DOM elemek + interakciók)}
-	\end{itemize}
-	
-	A rétegeket folyamatos, kétirányú frissítés köti össze, amelyet főként a \texttt{refresh()} és különböző listenerek koordinálnak.
-	
-	\section{Adatréteg (Model) --- Qbit}
-	A \textbf{Qbit} a rendszer központi adatmodellje.
-	
-	\subsection{Főbb metódusok}
-	\begin{itemize}
-		\item \texttt{refresh()} -- gondoskodik a modell, a UI és a 3D scene szinkronizációjáról:
-		\begin{enumerate}
-			\item Törli a régi 3D objektumot a scene-ből.
-			\item Újrarajzolja a frissített vektort.
-			\item Meghívja az UI frissítőt: \texttt{updateCoordinates(id, current)}.
-		\end{enumerate}
-		\item \texttt{reset()}, \texttt{remove()} és a kapu alkalmazása után mindig \texttt{refresh()} fut.
-	\end{itemize}
-	
-	\section{UI réteg --- DOM elemek}
-	A \texttt{createElement(...)} minden Qbithez létrehoz:
-	
-	\begin{itemize}
-		\item Színdobozt
-		\item Koordináta sort
-		\item Reset és törlés gombot
-	\end{itemize}
-	
-	\noindent Minden DOM elem az \texttt{id} alapján kapcsolódik a megfelelő Qbithoz a modellben. A DOM nem számol, csak kijelöl, indít, és tükrözi a modell változásait.
-	
-	\section{Listenerek}
-	A listenerek a rendszer egyik legfontosabb részei, mivel összekapcsolják a felhasználói lépéseket a modell műveleteivel.
-	
-	\subsection{Regisztráció}
-	A \texttt{RegisterListeners()} a betöltéskor hívódik meg, és az alábbi eseményeket köti:
-	
-	\begin{itemize}
-		\item Kapu gombok (\texttt{X, Y, Z, H, S, Phase})
-		\item \texttt{Add} gomb
-		\item \texttt{Clear all} gomb
-		\item Téma váltó
-		\item Koordináta inputok
-		\item Reset/Törlés gombok és wrapper kattintások a DOM listaelemein
-	\end{itemize}
-	
-	\subsection{Model $\rightarrow$ UI visszacsatolás}
-	Minden frissítés végén a listenerek \textbf{nem frissítik manuálisan a DOM-ot}.  
-	A modell maga kezeli a DOM frissítését, lentebb látható egy példa hogy hogyan:
-	
-	\begin{itemize}
-		\item \texttt{refresh()} $\rightarrow$ \texttt{updateCoordinates(...)}
-	\end{itemize}
-	
-	\noindent Így a UI soha nem írja felül hibásan a modell értékeit.
-	
-	\section{CSS rövid összefoglaló}
-	A rendszer felhasználói felületét modern, két témás (light/dark) stílus jellemzi amiket futás közben tudunk változtatni:
-	
-	\begin{itemize}
-		\item \textbf{Alap:} teljes képernyős layout, Arial betű, light/dark témák háttér- és színbeállításokkal.
-		\item \textbf{UI konténer (\#ui-container):} bal felső sarok, flex oszlop, lekerekített sarkok, árnyék, animált nyitás/bezárás.
-		\item \textbf{Gombok:} .fancy-btn gradienttel, hover/active animáció, kapu gombok (X, Y, Z, H, S, PH input).
-		\item \textbf{Listaelemek (\#listContainer .element):} flex, lekerekített sarkok, témától függő színek, hover effekt, görgethető.
-		\item \textbf{Műveletek:} .delete-btn és .reset-btn hover animáció, ikonok pointer-events: none.
-		\item \textbf{Scene:} A Scene és a gömb a kiválasztott téma színeiben jelenik meg, és az egész képernyőt lefedi.
-		
-		
-	\end{itemize}
+    A projektet egy webalkalmazásként valósítottuk meg JavaScript és WebGL alapokon (THREE.JS felhasználásával). A projekthez csatoltunk egy minimális webszerver alkalmazást, ami a localhost:8080 URL-en szolgálja ki az alkalmazást.
+
+
+    A projektet 3 fő részre osztottuk és ebben a felosztásban dokumentáltuk:
+    \begin{itemize}
+        \item Webes UI és kontroll logika
+        \item Matematikai reprezentáció
+        \item 3D-s megjelenítés
+    \end{itemize}
+
+    A kontroll logika felel azért, hogy összekösse a felhasználói inputokat (a kameramozgást kivéve) a háttérben lévő matematika reprezentációval és annak felhasználásával frissítse a 3D-s megjelenítést.
+
+    A matematika modell és a hozzá tartozó kód teljesen független a projekt többi részétől, csak a szükséges függvényeket és adatstruktúrákat szogáltatja.
+
+    A 3D-s megjelenítés szintén független a projekt maradékától, mivel csak egy API-t biztosít a szükséges elemek kirajzolásához. (Illetve, mivel a THREE.JS lehetővé teszi az egyszerű kameramozgatás implementálását, a kamera irányításának az inputjait is ez a komponens kezeli, megkerülve a kontrollert.)
 	
 	\section{Matematikai modell és implementáció}
+
+    A kvantumállapotok reprezentációjára két módszert is használtunk. A megjelenítésnél előnyösebb a Descartes-féle derékszögú koordinátarendszerben egy egységvektort használni, mivel azt egyszerű megjeleníteni. A kvantumkapuk esetében viszont az a könnyú, hogy ha csak egy mátrixot kell applikálni az állapotvektorra. Emiatt arra koncentráltunk, hogy a két állapot között tudjunk konvertálni és mindig a legegyszerűbb módszert használni.
 	
 	\subsection{Komplex számok}
 	A kvantumállapotok és kapuk komplex amplitúdókkal dolgoznak.
@@ -210,69 +183,6 @@
 
 	\subsection{Kvantumkapuk}
 	
-	\begin{itemize}
-		\item Pauli X:
-		\[
-		X = 
-		\begin{pmatrix}
-			0 & 1\\
-			1 & 0
-		\end{pmatrix}
-		\]
-		\item Pauli Y:
-		\[
-		Y = 
-		\begin{pmatrix}
-			0 & -i\\
-			i & 0
-		\end{pmatrix}
-		\]
-		\item Pauli Z:
-		\[
-		Z =
-		\begin{pmatrix}
-			1 & 0\\
-			0 & -1
-		\end{pmatrix}
-		\]
-		\item Hadamard:
-		\[
-		H = \frac{1}{\sqrt{2}}
-		\begin{pmatrix}
-			1 & 1\\
-			1 & -1
-		\end{pmatrix}
-		\]
-		\item S-kapu (fázis \(\pi/2\)):
-		\[
-		S = P\!\left(\tfrac{\pi}{2}\right)=
-		\begin{pmatrix}
-			1 & 0\\[4pt]
-			0 & e^{i\pi/2}
-		\end{pmatrix} =
-		\begin{pmatrix}
-			1 & 0\\[4pt]
-			0 & i
-		\end{pmatrix}
-		\]
-		\item T-kapu (fázis \(\pi/4\)):
-		\[
-		T = P\!\left(\tfrac{\pi}{4}\right)=
-		\begin{pmatrix}
-			1 & 0\\[4pt]
-			0 & e^{i\pi/4}
-		\end{pmatrix}
-		\]
-		\item Általános fáziskapu:
-		\[
-		P(\theta) = 
-		\begin{pmatrix}
-			1 & 0\\
-			0 & e^{i\theta}
-		\end{pmatrix}
-		\]
-	\end{itemize}
-	
 	Minden kapu alkalmazásának lépései:
 	
 	\begin{enumerate}
@@ -297,6 +207,194 @@
 	
 	Ez biztosítja, hogy a 3D vizualizáció és a matematikai modell mindig
 	pontos összhangban legyen.
+	
+	
+	\section{Webalkalmazás és 3Ds megjelenítés}
+	A rövid fejlesztési idő érdekében a THREE.JS könyvtárt használtuk a 3Ds megjelenítéshez. A THREE.JS előnye, hogy sok grafikai primitívet tartalmaz, ami lehetővé teszi a projekt gyors felállítását. Ilyenek például a körívek (a gömb megjelenítéséhez), hengerek és kúpok (vektorok rajzolásához) illetve az orthografikus kamera és annak kontroller kódja.
+	
+	
+	\subsection{Web}
+	A THREE.JS miatt esett a választás a webes technológiára. Léteznek asztali alkalmazáshoz használható könyvtárak vagy játékmotorok is, de a könyvtárak általában bonyolultabbak mint a THREE, a játékmotorok esetében pedig úgy gonoltuk, hogy "ágyúval verébre" szituáció lenne, ha egy komplex motort használnánk egy ilyen egyszerű vizualizációhoz.
+	
+	
+	Bár egy egyszerú webes alkalmazást szerver nélkül is el tud indítani a bögésző, úgy gondoltuk, hogy robusztusabb megoldás lenne egy kisméretű szerverrel kiszolgálni az alkalmazást. Igyekeztünk minél kisebb és egyszerűbb megoldást találni, ami keresztplatformos is (bár a feladatkiírás csak a windows-t követelte meg, szükség volt linux támogatásra is, mert a csapat egy része azon fejlesztett).
+	
+	
+	A legjobb megoldásnak az bizonyult, hogy a go programozási nyelv standard könyvtárának HTTP szerver implementációját felhasználva építünk egy minimális szervert. A szerver kódja megtalálható a server.go fájlban. A platformonként lefordított futtathatókat beletettük a projektbe, így biztosítva, hogy a futtatásnak ne legyen függősége a go.
+	
+	
+	\subsection{3D}
+	A 3d megjelenítés fő részei a következők: Segédrács és Bloch-gömb illetve a vektorok. Ezen alakzatok kirajzolásán kívül még érdekes lehet a válaszottt koordináta rendszer illetve az árnyalás.
+	
+	\subsubsection{Koordináta rendszer}
+	A THREE.JS egy jobbkezes koordinátarendszert használ, ahol az y tengely mutat felfele. Ez természetesen annyit jelent csak, hogy a koordinátarendszer jobbkezes és a kamera alapértelmezett UP vektora (0, 1, 0). A bloch gömb általában jobbkezes Z-up koordinátarendszerben van reprezentálva (legalábbis az előadásdiákban és más szimulátorokban így van). Nem lenne semmi akadálya, hogy egy Y-up rendszert használjunk, hiszen a reprezentációra az is teljesen alkalmas, csak a konverziós matematika és az állapotvektor-Bloch-vektor megfeleltetések változnának meg (pl. |0> -> (0,0,1) helyett (0,1,0) stb.). 
+	
+	Mindenesetre a konvenció megtartása mellett döntöttünk és inkább a kamera állását változtattuk meg (és a segédrácsot forgattuk el).
+	
+	A koordinátarendszer és a nézet beállítását az orthografikus kamera paraméterezése határozza meg, ahol a \texttt{up} vektor Z-tengelyre állításával értük el a kívánt tájolást:
+
+\begin{lstlisting}[language=JavaScript]
+const camera = new THREE.OrthographicCamera(
+  -orthoSize * aspect, orthoSize * aspect,
+   orthoSize, -orthoSize,
+   0.1, 1000
+);
+// A Z tengely mutat felfele a kamera szamara
+camera.up.set(0,0,1); 
+camera.position.set(-2.5, -2.5, 2.5); 
+camera.lookAt(0,0,0);
+\end{lstlisting}
+	
+	
+	\subsubsection{Árnyalás}
+	A felület nélküli alakzatok (szakaszok, ívek) egyszínű megjelenítést használtunk. A felületek esetében szintén egyszínű (árnyalás és árnyékolás nélküli) megjelenítést használtunk az egyszerűség kedvéért. (És egyébként is furcsa lett volna egy ilyen típusú megjelenítőben fényforrásokat definiálni.)
+	
+	\subsubsection{Segédrács és Bloch-gömb}
+	A koordinátarendszer felfogását és a térérzet kialakulását jelentősen segíti a rács, amit az XY síkkal (vízszintes) tettünk párhuzamossá. A megjelenítéshez a THREE.JS előre megírt AxisHelper osztályát használtuk.
+	
+	
+	A Bloch-gömb megjelenítésére egy áttetsző szürke gömböt használtunk, szintén a THREE.JS leimplementált osztályát használva. A könnyebb interpretáció érdekében kirajzoltatunk 3 a tengelyekre merőleges (és azokkal megegyező színű) főkört. Ehhez saját függvényt írtunk, ami legenerálja a kör adott számú pontját, majd összeköti őket szakaszokkal. Elég magas felbontás esetén a hatás kör alakú lesz.
+	
+	A főkörök kirajzolásához szükséges pontok generálását a \texttt{generateArcPoints} függvény végzi. A függvény a kezdőpontból kiindulva egy forgatási tengely (normálvektor) körül forgatja a vektort kvaterniók segítségével, így megkapva az ív pontjait:
+
+\begin{lstlisting}[language=JavaScript, caption=A körív pontjainak generálása]
+function generateArcPoints(vStart, arcPlaneNormal, angle, numPoints) {
+  if (numPoints <= 1) {
+    return numPoints === 1 ? [vStart.clone()] : [];
+  }
+  
+  const axis = arcPlaneNormal.clone().normalize();
+  const stepAngle = angle / (numPoints - 1);
+
+  // Forgatas kvaternioval
+  const qStep = new THREE.Quaternion().setFromAxisAngle(axis, stepAngle);
+
+  const points = [];
+  const currentPoint = vStart.clone();
+  
+  for (let i = 0; i < numPoints; i++) {
+    points.push(currentPoint.clone());
+    currentPoint.applyQuaternion(qStep);
+  }
+
+  return points;
+}
+\end{lstlisting}
+	
+	
+	\subsubsection{Vektorok}
+	A vektorok megjelenítéséhez saját függvényt írtunk, ami két meglévő alakzatot a THREE.JS hengert és kúpot használja fel a vektor szárának és csúcsának kirajzolására.
+
+A vektorok megjelenítését a \texttt{drawVector} függvény végzi. A függvény dinamikusan hoz létre egy csoportot (\texttt{THREE.Group}), amely tartalmazza a vektor testét alkotó hengert és a fejét alkotó kúpot. A csoportot végül a \texttt{setFromUnitVectors} segítségével forgatjuk a megfelelő irányba:
+
+\begin{lstlisting}[language=JavaScript, caption=Vektor kirajzolása és forgatása]
+function drawVector(scene, vEnd, colorHex, options = {}) {
+    // ... opciok kibontasa ...
+    const length = vEnd.length();
+    const arrowGroup = new THREE.Group();
+
+    // 1. A szar (henger) letrehozasa
+    const shaftLength = length - headLength;
+    if (shaftLength > 0) {
+        const shaftGeometry = new THREE.CylinderGeometry(shaftRadius, shaftRadius, shaftLength, 8);
+        const shaft = new THREE.Mesh(shaftGeometry, material);
+        shaft.position.y = shaftLength / 2;
+        arrowGroup.add(shaft);
+    }
+    
+    // 2. A fej (kup) letrehozasa
+    const headGeometry = new THREE.ConeGeometry(headRadius, headLength, 12);
+    const head = new THREE.Mesh(headGeometry, material);
+    head.position.y = length - headLength / 2;
+    arrowGroup.add(head);
+
+    // 3. Forgatas a celiranyba
+    const direction = vEnd.clone().normalize();
+    const upVector = new THREE.Vector3(0, 1, 0); 
+    const quaternion = new THREE.Quaternion().setFromUnitVectors(upVector, direction);
+    
+    arrowGroup.setRotationFromQuaternion(quaternion);
+    scene.add(arrowGroup);
+    return arrowGroup;
+}
+\end{lstlisting}
+
+
+    \section{UI és kontroll logika}
+
+    \subsection{Áttekintés}
+	A rendszer két fő rétegből áll: 
+	
+	\begin{itemize}
+		\item \textbf{Adatréteg (Qbit modellek)}
+		\item \textbf{UI réteg (DOM elemek + interakciók)}
+	\end{itemize}
+	
+	A rétegeket folyamatos, kétirányú frissítés köti össze, amelyet főként a \texttt{refresh()} és különböző listenerek koordinálnak.
+	
+	\subsection{Adatréteg (Model) --- Qbit}
+	A \textbf{Qbit} a rendszer központi adatmodellje.
+	
+	\subsubsection{Főbb metódusok}
+	\begin{itemize}
+		\item \texttt{refresh()} -- gondoskodik a modell, a UI és a 3D scene szinkronizációjáról:
+		\begin{enumerate}
+			\item Törli a régi 3D objektumot a scene-ből.
+			\item Újrarajzolja a frissített vektort.
+			\item Meghívja az UI frissítőt: \texttt{updateCoordinates(id, current)}.
+		\end{enumerate}
+		\item \texttt{reset()}, \texttt{remove()} és a kapu alkalmazása után mindig \texttt{refresh()} fut.
+	\end{itemize}
+	
+	\subsection{UI réteg --- DOM elemek}
+	A \texttt{createElement(...)} minden Qbithez létrehoz:
+	
+	\begin{itemize}
+		\item Színdobozt
+		\item Koordináta sort
+		\item Reset és törlés gombot
+	\end{itemize}
+	
+	\noindent Minden DOM elem az \texttt{id} alapján kapcsolódik a megfelelő Qbithoz a modellben. A DOM nem számol, csak kijelöl, indít, és tükrözi a modell változásait.
+	
+	\subsection{Listenerek}
+	A listenerek a rendszer egyik legfontosabb részei, mivel összekapcsolják a felhasználói lépéseket a modell műveleteivel.
+	
+	\subsubsection{Regisztráció}
+	A \texttt{RegisterListeners()} a betöltéskor hívódik meg, és az alábbi eseményeket köti:
+	
+	\begin{itemize}
+		\item Kapu gombok (\texttt{X, Y, Z, H, S, Phase})
+		\item \texttt{Add} gomb
+		\item \texttt{Clear all} gomb
+		\item Téma váltó
+		\item Koordináta inputok
+		\item Reset/Törlés gombok és wrapper kattintások a DOM listaelemein
+	\end{itemize}
+	
+	\subsubsection{Model $\rightarrow$ UI visszacsatolás}
+	Minden frissítés végén a listenerek \textbf{nem frissítik manuálisan a DOM-ot}.  
+	A modell maga kezeli a DOM frissítését, lentebb látható egy példa hogy hogyan:
+	
+	\begin{itemize}
+		\item \texttt{refresh()} $\rightarrow$ \texttt{updateCoordinates(...)}
+	\end{itemize}
+	
+	\noindent Így a UI soha nem írja felül hibásan a modell értékeit.
+	
+	\subsection{CSS rövid összefoglaló}
+	A rendszer felhasználói felületét modern, két témás (light/dark) stílus jellemzi amiket futás közben tudunk változtatni:
+	
+	\begin{itemize}
+		\item \textbf{Alap:} teljes képernyős layout, Arial betű, light/dark témák háttér- és színbeállításokkal.
+		\item \textbf{UI konténer (\#ui-container):} bal felső sarok, flex oszlop, lekerekített sarkok, árnyék, animált nyitás/bezárás.
+		\item \textbf{Gombok:} .fancy-btn gradienttel, hover/active animáció, kapu gombok (X, Y, Z, H, S, PH input).
+		\item \textbf{Listaelemek (\#listContainer .element):} flex, lekerekített sarkok, témától függő színek, hover effekt, görgethető.
+		\item \textbf{Műveletek:} .delete-btn és .reset-btn hover animáció, ikonok pointer-events: none.
+		\item \textbf{Scene:} A Scene és a gömb a kiválasztott téma színeiben jelenik meg, és az egész képernyőt lefedi.
+		
+		
+	\end{itemize}
 	
 	
 	
