@@ -10,17 +10,7 @@ const ARROW_HEAD_LENGTH = 0.12;
 const ARROW_HEAD_RADIUS = 0.05;
 
 
-/**
- * Generates an array of THREE.Vector3 points for an arc on a sphere 
- * centered at the origin, defined by its starting vector, the rotation axis,
- * and the angle to sweep.
- *
- * @param {THREE.Vector3} vStart The starting position vector of the arc.
- * @param {THREE.Vector3} arcPlaneNormal The axis of rotation (normal to the arc's plane).
- * @param {number} angle The angle in radians to sweep (e.g., Math.PI for a half circle).
- * @param {number} numPoints The total number of points to generate (incl. start/end).
- * @returns {THREE.Vector3[]} An array of points.
- */
+// generate arc from vStart perpendicular to arcPlaneNormal
 function generateArcPoints(vStart, arcPlaneNormal, angle, numPoints) {
   if (numPoints <= 1) {
     return numPoints === 1 ? [vStart.clone()] : [];
@@ -44,13 +34,7 @@ function generateArcPoints(vStart, arcPlaneNormal, angle, numPoints) {
 }
 
 
-/**
- * Draws a line using the generated points and adds it to the scene.
- *
- * @param {THREE.Scene} scene The scene to add the line to.
- * @param {THREE.Vector3[]} points The array of points defining the line.
- * @param {number} colorHex The color of the line (e.g., 0xFF0000).
- */
+//connects points to draw arc
 function drawArc(scene, points, colorHex) {
   const arcGeometry = new THREE.BufferGeometry().setFromPoints(points);
   
@@ -67,15 +51,7 @@ function drawArc(scene, points, colorHex) {
 }
 
 
-/**
- * Draws a 3D arrow vector from the origin to a specified endpoint.
- *
- * @param {THREE.Scene} scene The scene to add the vector to.
- * @param {THREE.Vector3} vEnd The endpoint of the vector.
- * @param {number} colorHex The color of the vector.
- * @param {object} [options] Configuration options.
- * @returns {THREE.Group} A group containing the cylinder shaft and cone head.
- */
+// draws a vector and adds it to the scene (needs to be removed manually)
 function drawVector(scene, vEnd, colorHex, options = {}) {
     const { 
         shaftRadius = ARROW_SHAFT_RADIUS, 
@@ -119,6 +95,8 @@ function drawVector(scene, vEnd, colorHex, options = {}) {
 }
 
 
+
+// basic setup
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight); 
@@ -127,6 +105,7 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x303030);
 
+// bloch sphere
 const sphereGeometry = new THREE.SphereGeometry(SPHERE_RADIUS, 32, 32);
 const sphereMaterial = new THREE.MeshBasicMaterial({ 
     color: 0x888888, 
@@ -153,6 +132,7 @@ drawVector(scene, new THREE.Vector3(0,0.3,0), new THREE.Color(0x00ff00), axesArr
 drawVector(scene, new THREE.Vector3(0,0,0.3), new THREE.Color(0x0000ff), axesArrowOpts);
 
 
+// small helper sphere in the center
 const originSphere = new THREE.Mesh(
   new THREE.SphereGeometry(0.025, 12, 12), 
   new THREE.MeshBasicMaterial({ color: 0xff0000 })
@@ -172,6 +152,7 @@ const n_Y = new THREE.Vector3(0, 1, 0);
 const n_Z = new THREE.Vector3(0, 0, 1); 
 
 
+// draw the great circle helpers
 let vStart = new THREE.Vector3(0, R, 0);
 drawArc(scene, generateArcPoints(vStart, n_X, PI, NUM_ARC_POINTS), 0xff0000); 
 vStart = new THREE.Vector3(0, -R, 0);
@@ -197,6 +178,7 @@ const stateVectorSpherical = new THREE.Vector3(
 );
 
 
+// define cam
 let orthoSize = 2.5; 
 let aspect = window.innerWidth / window.innerHeight;
 const camera = new THREE.OrthographicCamera(
@@ -241,6 +223,12 @@ function animate() {
 }
 animate();
 
+
+
+
+
+
+// cartesian qbit representation
 class Qbit {
   constructor(
     id,
